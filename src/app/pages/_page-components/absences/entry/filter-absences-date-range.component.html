@@ -1,0 +1,49 @@
+<div class="modal-header">
+  Report Absence
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group" [formGroup]="dataFormCloned">
+          <label for="select_date_start">Date Start</label>
+          <div class="input-group">
+            <input id="select_date_start" class="form-control" style="float:none" placeholder="Select Date Start"
+                   name="select_date_start" ngx-mydatepicker
+                   value="{{dataFormCloned.controls['date_start'].value | date:'mediumDate'}}"
+                   [options]="dateConfigurationStart"
+                   [ngClass]="{'form-control form-control-danger': serverErrors['date_start'], 'form-control': true}"
+                   #dp_start="ngx-mydatepicker" (dateChanged)="onDateStartChanged($event)" readonly/>
+            <span class="input-group-append">
+              <button type="button" class="btn btn-info" (click)="dp_start.toggleCalendar()">
+                <i class="ion ion-calendar"></i>
+              </button>
+            </span>
+          </div>
+          <small class="form-text" *ngIf="serverErrors['date_start']">{{serverErrors['date_start']}}</small>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group" [formGroup]="dataFormCloned">
+          <label for="select_date_start">Date End</label>
+          <div class="input-group">
+            <input id="select_date_end" class="form-control" style="float:none" placeholder="Select Date End"
+                   name="select_date_end" ngx-mydatepicker
+                   value="{{dataFormCloned.controls['date_end'].value | date:'mediumDate'}}"
+                   [options]="dateConfigurationEnd"
+                   [ngClass]="{'form-control form-control-danger': serverErrors['date_end'], 'form-control': true}"
+                   #dp_end="ngx-mydatepicker" (dateChanged)="onDateEndChanged($event)" readonly/>
+            <span class="input-group-append">
+              <button type="button" class="btn btn-info" (click)="dp_end.toggleCalendar()">
+                <i class="ion ion-calendar"></i>
+              </button>
+            </span>
+          </div>
+          <small class="form-text" *ngIf="serverErrors['date_end']">{{serverErrors['date_end']}}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-md btn-primary" type="submit" (click)="exportNow()" style="cursor:pointer">Export</button>
+    <button class="btn btn-md btn-danger" (click)="closeModal()">Cancel</button>
+  </div>

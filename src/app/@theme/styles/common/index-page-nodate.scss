@@ -1,0 +1,65 @@
+@import '../themes';
+
+@include nb-install-component() {
+
+  table {
+    border-collapse: collapse !important;
+  }
+
+  table tr th,
+  table tr th a {
+    font-family: nb-theme(smart-table-header-font-family);
+    font-size: 12px;
+    font-weight: nb-theme(smart-table-header-font-weight);
+    line-height: nb-theme(smart-table-header-line-height);
+    color: nb-theme(smart-table-header-fg);
+  }
+
+  table tr td {
+    font-family: nb-theme(smart-table-font-family);
+    font-size: 12px;
+    font-weight: nb-theme(smart-table-font-weight);
+    line-height: nb-theme(smart-table-line-height);
+    color: nb-theme(smart-table-fg);
+  }
+
+  table tr th,
+  table tr td {
+    position: relative;
+    padding: nb-theme(smart-table-padding);
+    border-bottom: 1px solid nb-theme(smart-table-separator);
+    border-top: 1px solid nb-theme(smart-table-separator);
+    vertical-align: middle;
+  }
+
+  th:nth-child(1), td:nth-child(1) {
+    width: 100px;
+  }
+
+  th:last-child, td:last-child {
+    width: 150px;
+  }
+
+  tbody tr {
+    &.selected, &:hover {
+      background: nb-theme(smart-table-bg-active) !important;
+    }
+
+    &:nth-child(2n) {
+      background-color: nb-theme(color-bg);
+    }
+  }
+
+}
+
+.nb-icons {
+  padding: 0.75rem 0;
+  font-size: 2rem;
+}
+
+a.icon-container {
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+}

@@ -1,0 +1,28 @@
+<nb-card>
+  <nb-card-header>Custom Import {{ title }}</nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <div *ngIf="service != null">
+      <div class="form-group">
+        <label for="file">Choose File</label>
+        <input
+          type="file"
+          id="file"
+          (change)="handleFileInput($event.target.files)"
+          class="form-control">
+      </div>
+    </div>
+    <div class="alert alert-primary" role="alert" *ngIf="service == null">
+      Import {{ title }} not available.
+    </div>
+
+    <div class="clearfix">
+      <button (click)="uploadFileToActivity()" *ngIf="!loading&&(service != null)" class="btn btn-success float-left">Upload</button>
+      <span *ngIf="loading" class="float-left">
+        <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+      </span>
+      <button type="button" class="btn btn-danger float-right" (click)="back()">Back</button>
+    </div>
+
+  </nb-card-body>
+</nb-card>

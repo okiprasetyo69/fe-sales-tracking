@@ -1,0 +1,96 @@
+<nb-card>
+  <nb-card-header>Collect Plan > Generate</nb-card-header>
+  <toaster-container></toaster-container>
+
+  <nb-card-body>
+    <form [formGroup]="dataForm">
+      <div class="row">
+        <div class="col-md-6">
+          <label for="select_start_date">Start Date</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="Start Date"
+              ngx-mydatepicker
+              id="select_start_date"
+              name="select_start_date"
+              [options]="myDatePickerOptions"
+              (dateChanged)="onDateStartChanged($event)"
+              #ds="ngx-mydatepicker"
+              autocomplete="off"/>
+            <span class="input-group-append">
+              <button type="button" class="btn btn-danger" (click)="ds.clearDate()">
+                <i class="ion ion-close"></i>
+              </button>
+              <button type="button" class="btn btn-info" (click)="ds.toggleCalendar()">
+                <i class="ion ion-calendar"></i>
+              </button>
+            </span>
+          </div>
+          <small class="form-text" *ngIf="serverErrors['start_date']">{{serverErrors['start_date']}}</small>
+        </div>
+        <div class="col-md-6">
+          <label for="select_end_date">End Date</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="End Date"
+              ngx-mydatepicker
+              id="select_end_date"
+              name="select_end_date"
+              [options]="myDatePickerOptions"
+              (dateChanged)="onDateEndChanged($event)"
+              #de="ngx-mydatepicker"
+              autocomplete="off"/>
+            <span class="input-group-append">
+              <button type="button" class="btn btn-danger" (click)="de.clearDate()">
+                <i class="ion ion-close"></i>
+              </button>
+              <button type="button" class="btn btn-info" (click)="de.toggleCalendar()">
+                <i class="ion ion-calendar"></i>
+              </button>
+            </span>
+          </div>
+          <small class="form-text" *ngIf="serverErrors['end_date']">{{serverErrors['end_date']}}</small>
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="select_user_id">User</label>
+            <ng-select
+              [items]='dataUser'
+              bindLabel="username"
+              bindValue="id"
+              id="select_user_id"
+              formControlName="user_id"
+              placeholder="Select User"
+              [formGroup]="dataForm"
+              name="user_id"
+              [loading]="isLoadingDropdownUser"
+              (open)="openDropdownUser()"
+              appendTo="body">
+            </ng-select>
+            <small class="form-text" *ngIf="serverErrors['user_id']">{{serverErrors['user_id']}}</small>
+          </div>
+        </div>
+      </div>
+      <br/>
+      <div class="row" *ngIf="!loadingGenerate">
+        <div class="col-md-6">
+          <button class="btn btn-primary" type="submit" (click)="generateData(dataForm.value, 'close')">Generate
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button class="btn btn-primary float-right" (click)="back()">Back</button>
+        </div>
+      </div>
+      <div *ngIf="loadingGenerate">
+        <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+      </div>
+    </form>
+  </nb-card-body>
+</nb-card>
+
+<ngx-dev-mode [dataJson]="dataForm.value"></ngx-dev-mode>

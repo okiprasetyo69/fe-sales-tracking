@@ -1,0 +1,80 @@
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&isView" class="row">
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="submit" class="btn btn-primary" (click)="dataEdit()">Edit</button>
+  </div>
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary float-right" (click)="back()">Back</button>
+  </div>
+  <div class="col-md-6" *ngIf="isApprovalView">
+    <h1>APPROVAL PREVIEW</h1>
+  </div>
+
+</div>
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&isView">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingDropdown||isLoadingGeneral"></ngx-form-loading>
+<nb-card *ngIf="!(isLoadingDropdown||isLoadingGeneral)">
+  <nb-card-header>Division > {{method | ngxCapitalize}}</nb-card-header>
+  <nb-card-body>
+    <toaster-container></toaster-container>
+    <form [formGroup]="dataForm">
+      <fieldset [disabled]="isSubmitting||isView">
+        <div class="row">
+          <!--left side-->
+          <div class="col-md-6">
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Division Name"
+              field="division_name"
+              [error]="serverErrors"></ngx-form-input-md>
+
+            <div class="form-group" [formGroup]="dataForm">
+              <label for="division_code">Division Code</label>
+              <input type="text"
+                     [ngClass]="{'form-control form-control-danger': serverErrors['division_code'], 'form-control': true}"
+                     formControlName="division_code"
+                     id="division_code"
+                     placeholder="Division Code ( _ _ )"
+                     [textMask]="{mask: division_code_mask, guide: false}">
+              <small class="form-text" *ngIf="serverErrors['division_code']">{{serverErrors['division_code']}}</small>
+            </div>
+          </div>
+          <!--end of left side-->
+
+        </div>
+      </fieldset>
+
+    </form>
+  </nb-card-body>
+</nb-card>
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView">
+  <div *ngIf="!isSubmitting">
+    <button
+      *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView&&(method==='edit')"
+      [disabled]="isSubmitting"
+      type="submit"
+      class="btn btn-primary"
+      (click)="saveData(dataForm.value, 'continue')">Save & Continue
+    </button>
+    <button
+      *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView"
+      [disabled]="isSubmitting"
+      type="submit"
+      class="btn btn-primary"
+      (click)="saveData(dataForm.value, 'close')">Save & Close <i class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+    </button>
+    <button
+      *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView"
+      [disabled]="isSubmitting"
+      type="button"
+      class="btn btn-danger"
+      (click)="back()">Back <i class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+    </button>
+  </div>
+  <div *ngIf="isSubmitting">
+    <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+  </div>
+</div>
+<ngx-dev-mode [dataJson]="dataForm.value"></ngx-dev-mode>

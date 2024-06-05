@@ -1,0 +1,22 @@
+<nb-card>
+    <nb-card-header>Sales Order
+        <div class="float-right">
+<!--            <ngx-filter-button [indexTable]="indexTable"></ngx-filter-button>-->
+        </div>
+    </nb-card-header>
+    <toaster-container></toaster-container>
+    <nb-card-body>
+        <button class="btn btn-primary" type="button" routerLink="/pages/sales/activities/sales_order/import">
+            Import
+        </button>
+        <br/><br/>
+        <ngx-index-table
+                [endPoint]="endPoint"
+                [urlReplacement]="replacement"
+                [tableData]="tableData"
+                [actionButton]="actionButton"
+                [withAction]="true"
+                [withNumber]="true"
+                #indexTable></ngx-index-table>
+    </nb-card-body>
+</nb-card>

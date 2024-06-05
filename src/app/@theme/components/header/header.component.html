@@ -1,0 +1,38 @@
+<div class="header-container"
+     [class.left]="position === 'normal'"
+     [class.right]="position === 'inverse'">
+  <a (click)="toggleSidebar()" href="#" class="navigation"><i class="nb-menu"></i></a>
+
+  <div class="logo-containter">
+    <div class="logo"><span>{{name}}</span></div>
+  </div>
+  <toaster-container [toasterconfig]="config"></toaster-container>
+</div>
+
+<div class="header-container">
+  <!--<ngx-layout-direction-switcher></ngx-layout-direction-switcher>-->
+  <nb-actions
+    size="medium"
+    [class.right]="position === 'normal'"
+    [class.left]="position === 'inverse'">
+    <nb-action *nbIsGranted="['view', 'user']">
+      <nb-user [nbContextMenu]="userMenu" [name]="user?.username" [picture]="user?.picture"></nb-user>
+    </nb-action>
+    <nb-action>
+      <a href="javascript:void(0)" (click)="inbox()" class="icon-container">
+        <i class="control-icon nb-email"></i>
+        <span class="icon-notification icon-notification-top-right"
+              *ngIf="inbox_counter != 0">{{ inbox_counter }}</span>
+      </a>
+    </nb-action>
+    <nb-action>
+      <a href="javascript:void(0)" (click)="approval()" class="icon-container">
+        <i class="control-icon nb-compose"> </i>
+        <span class="icon-notification icon-notification-top-right"
+              *ngIf="approval_counter != 0">{{ approval_counter }}</span>
+      </a>
+    </nb-action>
+    <span></span>
+  </nb-actions>
+  <ngx-theme-switcher></ngx-theme-switcher>
+</div>

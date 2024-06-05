@@ -1,0 +1,106 @@
+<div class="modal-header">
+  Filter Alert
+</div>
+<div class="modal-body">
+  <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_user_id">Select User</label>
+    <!--suppress XmlDuplicatedId -->
+    <ng-select
+      [ngClass]="{'error': serverErrors['user_id']}"
+      [items]='userData'
+      bindLabel="username"
+      bindValue="id"
+      id="select_user_id"
+      placeholder="Select User ( Optional )"
+      formControlName="user_id"
+      appendTo="body"
+      [multiple]="true"
+      [loading]="dropdownUserLoading"
+      (open)="openUserDropdown()"
+      (change)="changeUser($event)"></ng-select>
+    <small class="form-text" *ngIf="serverErrors['user_id']">{{serverErrors['user_id']}}</small>
+  </div>
+  <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_user_id">Select Branch</label>
+    <!--suppress XmlDuplicatedId -->
+    <ng-select
+      [ngClass]="{'error': serverErrors['branch_id']}"
+      [items]='branchData'
+      bindLabel="name"
+      bindValue="id"
+      id="select_branch_id"
+      placeholder="Select Branch ( Optional )"
+      formControlName="branch_id"
+      appendTo="body"
+      [multiple]="true"
+      [loading]="dropdownBranchLoading"
+      (open)="openBranchDropdown()"></ng-select>
+    <small class="form-text" *ngIf="serverErrors['branch_id']">{{serverErrors['branch_id']}}</small>
+  </div>
+  <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_type_filter">Filter By</label>
+    <!--suppress XmlDuplicatedId -->
+    <ng-select
+      [ngClass]="{'error': serverErrors['data_filter_by']}"
+      [items]='dataFilterBy'
+      bindLabel="name"
+      bindValue="code"
+      id="select_type_filter"
+      placeholder="Select Filter By"
+      formControlName="data_filter_by"
+      appendTo="body" [loading]="false"
+      [clearable]="false"
+      (change)="changeFilterBy()"></ng-select>
+    <small class="form-text" *ngIf="serverErrors['data_filter_by']">{{serverErrors['data_filter_by']}}</small>
+  </div>
+  <div class="row" *ngIf="filterByRange">
+    <div class="col-md-6">
+      <div class="form-group" [formGroup]="dataFormCloned">
+        <label for="select_date_start">Date Start</label>
+        <!--suppress XmlDuplicatedId -->
+        <div class="input-group">
+          <!--suppress XmlDuplicatedId -->
+          <input id="select_date_start" class="form-control" style="float:none" placeholder="Select Date Start"
+                 name="select_date_start" ngx-mydatepicker
+                 value="{{dataFormCloned.controls['date_start'].value | date:'mediumDate'}}"
+                 [options]="dateConfigurationStart"
+                 [ngClass]="{'form-control form-control-danger': serverErrors['date_start'], 'form-control': true}"
+                 #dp_start="ngx-mydatepicker" (dateChanged)="onDateStartChanged($event)" readonly/>
+          <span class="input-group-append" *ngIf="!isView">
+            <button type="button" class="btn btn-info" (click)="dp_start.toggleCalendar()">
+              <i class="ion ion-calendar"></i>
+            </button>
+          </span>
+        </div>
+        <small class="form-text" *ngIf="serverErrors['date_start']">{{serverErrors['date_start']}}</small>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group" [formGroup]="dataFormCloned">
+        <label for="select_date_start">Date End</label>
+        <!--suppress XmlDuplicatedId -->
+        <div class="input-group">
+          <!--suppress XmlDuplicatedId -->
+          <input id="select_date_end" class="form-control" style="float:none" placeholder="Select Date End"
+                 name="select_date_end" ngx-mydatepicker
+                 value="{{dataFormCloned.controls['date_end'].value | date:'mediumDate'}}"
+                 [options]="dateConfigurationEnd"
+                 [ngClass]="{'form-control form-control-danger': serverErrors['date_end'], 'form-control': true}"
+                 #dp_end="ngx-mydatepicker" (dateChanged)="onDateEndChanged($event)" readonly/>
+          <span class="input-group-append" *ngIf="!isView">
+            <button type="button" class="btn btn-info" (click)="dp_end.toggleCalendar()">
+              <i class="ion ion-calendar"></i>
+            </button>
+          </span>
+        </div>
+        <small class="form-text" *ngIf="serverErrors['date_end']">{{serverErrors['date_end']}}</small>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+<div class="modal-footer">
+  <button class="btn btn-md btn-success" type="submit" (click)="filterNow()">Filter</button>
+  <button class="btn btn-md btn-danger" (click)="closeModal()">Cancel</button>
+</div>

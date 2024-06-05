@@ -1,0 +1,30 @@
+<button class="btn btn-primary" type="button" routerLink="/pages/settings/company/edit">
+  Edit
+</button>
+<br/><br/>
+<nb-card>
+  <nb-card-header>Company</nb-card-header>
+  <nb-card-body *ngIf="empty_company">
+    <div class="alert alert-primary" role="alert">
+      You need to insert your company data first. Please contact your IT Administrator.
+    </div>
+    <!--<button class="btn btn-primary" type="button" routerLink="/pages/settings/company/create">-->
+      <!--Create New Data-->
+    <!--</button>-->
+  </nb-card-body>
+
+  <nb-card-body *ngIf="!empty_company">
+    <ngx-header-detail label="Branch Code" content="{{company['branch_code']}}"></ngx-header-detail>
+    <ngx-header-detail label="Company Name" content="{{company['name']}}"></ngx-header-detail>
+    <ngx-header-detail *ngIf="false" label="Email" content="{{company['email']}}"></ngx-header-detail>
+    <ngx-header-detail label="Phone" content="{{company['phone']}}"></ngx-header-detail>
+    <ngx-header-detail label="Address" content="{{company['address']}}"></ngx-header-detail>
+    <ngx-header-detail label="Working Days" content="{{company['working_day_start']}} - {{company['working_day_end']}}"></ngx-header-detail>
+    <ngx-header-detail label="Working Hours" content="{{company['working_hour_start']}} - {{company['working_hour_end']}}"></ngx-header-detail>
+
+    <!--<ngx-header-detail label="Working Hours" content="{{company['working_hour_start'] | date:'HH:mm'}} - {{company['working_hour_end'] | date:'HH:mm'}}"></ngx-header-detail>-->
+
+
+  </nb-card-body>
+
+</nb-card>

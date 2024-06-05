@@ -1,0 +1,63 @@
+<nb-card>
+  <nb-card-header>
+    Report Sales Permission ( {{dateStringTitle}} )
+    <div class="float-right">
+      <button class="btn btn-sm btn-success" (click)="exportExcel()">
+        <i class="fa fa-file-excel"></i>
+      </button>
+      <button class="btn btn-sm btn-success" (click)="exportPdf()">
+        <i class="fa fa-file-pdf"></i>
+      </button>
+      <button class="btn btn-sm btn-success" (click)="print()">
+        <i class="fa fa-print"></i>
+      </button>
+      &nbsp;&nbsp;
+      <button class="btn btn-sm btn-danger" (click)="dataFilter()">
+        <i class="fa fa-filter"></i>
+      </button>
+    </div>
+  </nb-card-header>
+  <toaster-container></toaster-container>
+
+  <nb-card-body>
+    <br>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Date</th>
+          <th>Permission Type</th>
+          <th>User</th>
+          <th>Branch</th>
+          <th>Division</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Approved / rejected by</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of datasets; let i = index">
+          <!-- supress Stylelint -->
+          <td>{{(i + 1) + startNumber }}</td>
+          <!-- @TODO: Fix harusnya ada medium date -->
+          <td>{{data.date}}</td>
+          <td>{{data.type.replace("_", " ") | ngxCapitalize }}</td>
+          <td>{{data['create_user']['name']}}</td>
+          <td>{{data['create_user']['branch_name']}}</td>
+          <td>{{data['create_user']['division_name']}}</td>
+          <td>{{data.notes}}</td>
+          <td>
+            {{data.is_approved == 1 ? 'Approved' : ''}}
+            {{data.is_rejected == 1 ? 'Rejected' : ''}}
+            {{data.is_approved == 0 && data.is_rejected == 0 ? 'Pending' : ''}}
+          </td>
+          <td>
+            {{data.is_approved == 1 ? data['approval_user']['name'] : ''}}
+            {{data.is_rejected == 1 ? data['reject_user']['name'] : ''}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+
+</nb-card>

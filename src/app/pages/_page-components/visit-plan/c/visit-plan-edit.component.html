@@ -1,0 +1,232 @@
+<div class="row" *ngIf="isView">
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button *ngIf="!hideSaveButton" type="button" class="btn btn-primary" (click)="dataEdit()">Edit</button>
+    <button type="button" class="btn btn-danger" (click)="addInvoiceModal()" *ngIf="showInvoice && statusAddNewInvoice">
+      Add New Invoice
+    </button>
+  </div>
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary float-right" (click)="back()">Back</button>
+  </div>
+  <div class="col-md-6" *ngIf="isApprovalView">
+    <h1>APPROVAL PREVIEW</h1>
+  </div>
+</div>
+<div *ngIf="isView">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingGeneral"></ngx-form-loading>
+<!--<form [formGroup]="dataForm">-->
+<nb-card *ngIf="!(isLoadingGeneral)">
+  <nb-card-header>Visit Plan > {{ method | ngxCapitalize }}</nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <div class="row">
+      <!--left side-->
+      <div class="col-md-6">
+        <ngx-form-input-md
+          [dataSelect]="dataUser"
+          dataSelectKey="id"
+          dataSelectLabel="username"
+          field="user_id"
+          [group]="dataForm"
+          [error]="serverErrors"
+          label="Select User"
+          (actionChange)="changeUser()"
+          (actionOpen)="openDropdownUser()"
+          [showLoading]="userDropdownLoading"
+          type="select"></ngx-form-input-md>
+      </div>
+
+      <!--right side-->
+      <div class="col-md-6">
+        <ngx-form-input-md
+          [group]="dataForm"
+          field="date"
+          [error]="serverErrors"
+          label="Date"
+          type="date"
+          [isView]="isView"
+        ></ngx-form-input-md>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf="!(isLoadingGeneral)">
+  <nb-tabset>
+    <nb-tab tabTitle="Destination" [active]="true">
+      <ngx-form-destination
+        [formGroup]="dataForm"
+        fieldRoute="route"
+        fieldStartBranch="start_route_branch_id"
+        fieldEndBranch="end_route_branch_id"
+        fieldDestination="destination"
+        fieldDestinationOrder="destination_order"
+        fieldUseRoute="is_use_route"
+        [isView]="isView"
+        [withOrder]="true"
+        [serverErrors]="serverErrors"
+        (out_route)="setRoute($event)"
+        (out_destination_order)="setDestinationOrder($event)"
+        (out_destination)="setDestination($event)"
+        (generateSuccessTriggered)="generateRouteSuccess($event)"
+        [planModel]="visitPlan"
+        (checkbox_chage_state)="changeCheckBox($event)">
+      </ngx-form-destination>
+    </nb-tab>
+    <nb-tab tabTitle="New Destination">
+      <div class="alert alert-primary" role="alert" *ngIf="destination_new == null">
+        No New Destination
+      </div>
+      <div *ngIf="destination_new != null">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>No.</th>
+            <th>Destinations</th>
+            <th>Order Route</th>
+            <th>Note</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let data of destination_new; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{ data.customer_name }}</td>
+            <td>{{ (data.order_route == null) ? '--' : data.order_route }}</td>
+            <td>{{ (data.note == null) ? '--' : data.note}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </nb-tab>
+
+    <nb-tab tabTitle="Invoice" *ngIf="showInvoice">
+      <button class="btn btn-outline-primary" (click)="getAutoInvoice()"
+              *ngIf="!isView && dataForm.controls['user_id'].value != null">
+        Auto Add Invoice
+      </button>
+      <br/><br/>
+      <div class="form-group" *ngIf="!isView && dataForm.controls['user_id'].value != null">
+        <label for="select_employee_id">Invoice</label>
+        <ng-select
+          [items]='dropdownInvoice'
+          bindLabel="combined_name"
+          bindValue="invoice_code"
+          id="select_employee_id"
+          [(ngModel)]="invoice_id"
+          placeholder="Select Invoice"
+          name="invoice"
+          appendTo="body"
+          [searchFn]="ngSelectSearchInvoice"
+          [loading]="invoiceLoading">
+        </ng-select>
+      </div>
+      <button
+        class="btn btn-primary"
+        *ngIf="!isView&&!!invoice_id"
+        (click)="addInvoice()">Add Invoice
+      </button>
+      <br *ngIf="!isView && !!invoice_id"/>
+      <div class="alert alert-primary" role="alert" *ngIf="dataForm.controls['user_id'].value == null">
+        Please select user for add invoice.
+      </div>
+      <br *ngIf="!isView || dataForm.controls['user_id'].value == null"/>
+      <div class="alert alert-primary" role="alert" *ngIf="dataForm.controls['invoice_id'].value.length == 0">
+        You don't have any invoice.
+      </div>
+
+      <input type="text" class="form-control" placeholder="Search invoice code..."
+             *ngIf="dataForm.controls['invoice_id'].value.length != 0" (input)="searchInvoiceField()"
+             [(ngModel)]="searchInvoice" name="searchInvoice"/>
+      <br/>
+
+      <div *ngIf="searchInvoice == ''">
+        <table class="table table-striped" *ngIf="dataForm.controls['invoice_id'].value.length != 0">
+          <thead>
+          <tr>
+            <th style="width: 20px;">No</th>
+            <th>Invoice No.</th>
+            <th>Customer</th>
+            <th *ngIf="!isView">Actions</th>
+          </tr>
+          </thead>
+          <tbody *ngIf="!ready_to_show_invoice">
+          <tr>
+            <td colspan="4">Loading invoice data...</td>
+          </tr>
+          </tbody>
+          <tbody *ngIf="ready_to_show_invoice">
+          <tr *ngFor="let data of dataForm.controls['invoice_id'].value; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{data.id_invoice}}</td>
+            <td>{{data.id_invoice | CustomerName: dropdownInvoice}}</td>
+            <td *ngIf="!isView">
+              <a class="icon-container" href="javascript:void(0)" *ngIf="data.is_confirm != 1">
+                <i class="nb-icons nb-trash" (click)="dataInvoiceDelete(data.id_invoice)" *ngIf="!isView"></i>
+              </a>
+              <a class="icon-container" href="javascript:void(0)" *ngIf="data.is_confirm == 1">
+                <i class="nb-icons nb-checkmark"></i>
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="searchInvoice != ''">
+        <table class="table table-striped" *ngIf="invoiceSearchResult.length != 0">
+          <thead>
+          <tr>
+            <th style="width: 20px;">No</th>
+            <th>Invoice No.</th>
+            <th>Customer</th>
+            <th *ngIf="!isView">Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let data of invoiceSearchResult; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{data.id_invoice}}</td>
+            <td>{{data.id_invoice | CustomerName: dropdownInvoice}}</td>
+            <td *ngIf="!isView">
+              <a class="icon-container" href="javascript:void(0)" *ngIf="data.is_confirm != 1">
+                <i class="nb-icons nb-trash" (click)="dataInvoiceDelete(data.id_invoice)" *ngIf="!isView"></i>
+              </a>
+              <a class="icon-container" href="javascript:void(0)" *ngIf="data.is_confirm == 1">
+                <i class="nb-icons nb-checkmark"></i>
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="alert alert-primary" role="alert" *ngIf="invoiceSearchResult.length == 0">
+          Invoice which related to {{ searchInvoice }} is not found
+        </div>
+      </div>
+    </nb-tab>
+    <nb-tab tabTitle="Routes">
+      <ngx-route-map
+        [withInstruction]="(dataForm.controls['is_use_route'].value == 1) ? true : false"
+        [routeLineShow]="(dataForm.controls['is_use_route'].value == 1) ? true : false"
+        [generated_order]="generated_order"
+        [generated_destination]="generated_destination"
+        [hideAnyMessage]="isView"
+        [generated_route]="generated_route">
+      </ngx-route-map>
+    </nb-tab>
+  </nb-tabset>
+</nb-card>
+<!--</form>-->
+
+<div *ngIf="!isLoadingGeneral&&!isView">
+  <div *ngIf="!isSubmiting">
+    <!--<button class="btn btn-primary" (click)="save('continue')" *ngIf="!isView&&(method != 'create')">Save & Continue</button>-->
+    <button *ngIf="!hideSaveButton" class="btn btn-primary" (click)="save('close')">Save & Close</button>
+    <button class="btn btn-danger" (click)="back()">Back</button>
+  </div>
+  <div *ngIf="isSubmiting">
+    <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+  </div>
+</div>
+<ngx-dev-mode [dataJson]="dataForm.value" title="Data Form"></ngx-dev-mode>

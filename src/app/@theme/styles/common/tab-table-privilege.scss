@@ -1,0 +1,252 @@
+@import '../themes';
+@import '../../../../../node_modules/bootstrap/scss/mixins/breakpoints';
+@import '../../../../../node_modules/@nebular/theme/styles/global/bootstrap/breakpoints';
+
+@include nb-install-component() {
+
+  table tr th,
+  table tr th a {
+    font-family: nb-theme(smart-table-header-font-family);
+    font-size: 12px;
+    font-weight: nb-theme(smart-table-header-font-weight);
+    line-height: nb-theme(smart-table-header-line-height);
+    color: nb-theme(smart-table-header-fg);
+  }
+
+  table tr td {
+    font-family: nb-theme(smart-table-font-family);
+    font-size: 12px;
+    font-weight: nb-theme(smart-table-font-weight);
+    line-height: nb-theme(smart-table-line-height);
+    color: nb-theme(smart-table-fg);
+  }
+
+  table tr th,
+  table tr td {
+    position: relative;
+    padding: nb-theme(smart-table-padding);
+    border: 1px solid nb-theme(smart-table-separator);
+    vertical-align: middle;
+  }
+
+  thead tr {
+    background: nb-theme(smart-table-header-bg);
+
+    &.ng2-smart-filters th {
+      padding: nb-theme(smart-table-filter-padding);
+
+      .ng2-smart-filter input {
+        line-height: nb-theme(smart-table-line-height);
+      }
+    }
+  }
+
+  .fixed_header {
+    /*Set a min width where your table start to look like crap*/
+    table { min-width: 600px; }
+
+    /*The next 3 sections make the magic happen*/
+    thead, tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    tbody {
+      display: block;
+      max-height: 500px;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+
+    td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /*Use the following to make sure cols align correctly*/
+    table, tr, th, td {
+      //border: 1px solid black;
+      border-collapse: collapse;
+    }
+
+    /*Set your columns to where you want them to be, skip the one that you can have resize to any width*/
+    th:nth-child(2), td:nth-child(2) {
+      width: 100px;
+    }
+    th:nth-child(3), td:nth-child(3) {
+      width: 100px;
+    }
+    th:nth-child(4), td:nth-child(4) {
+      width: 100px;
+    }
+    th:nth-child(5), td:nth-child(5) {
+      width: 100px;
+    }
+    th:nth-child(6), td:nth-child(6) {
+      width: 100px;
+    }
+    th:nth-child(7), td:nth-child(7) {
+      width: 100px;
+    }
+    //th:nth-child(2), td:nth-child(2) {
+    //  width: 210px;
+    //}
+  }
+
+  select {
+    &.permission-table {
+      padding: 0;
+      font-size: 11px !important;
+    }
+  }
+
+  nb-tabset {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  nb-tab {
+    padding: nb-theme(padding);
+  }
+
+  /deep/ ngx-tab1, /deep/ ngx-tab2 {
+    display: block;
+    padding: nb-theme(padding);
+  }
+
+  //.input-group {
+  //  margin-bottom: 1rem;
+  //}
+
+  .validation-checkboxes {
+    display: flex;
+    justify-content: space-between;
+
+    .custom-control {
+      margin-left: 1rem;
+    }
+  }
+
+  .demo-checkboxes {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .demo-radio {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .demo-disabled-checkbox-radio {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .demo-checkboxes-radio {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .demo-rating {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .star {
+    font-size: 1.5rem;
+    color: nb-theme(color-fg);
+  }
+
+  .filled {
+    color: nb-theme(color-fg);
+  }
+
+  // TODO: Replace with the card header styles mixin
+  .rating-header {
+    line-height: 2rem;
+    font-size: 1.25rem;
+    font-family: nb-theme(font-secondary);
+    font-weight: nb-theme(font-weight-bolder);
+    color: nb-theme(color-fg-heading);
+  }
+
+  .current-rate {
+    font-size: 1.5rem;
+    padding-left: 1rem;
+    color: nb-theme(color-fg-heading);
+  }
+
+  .full-name-inputs {
+    display: flex;
+  }
+
+  .input-group.has-person-icon {
+    position: relative;
+
+    .form-control {
+      padding-left: 3rem;
+    }
+
+    &::before {
+      content: '\F47D';
+      font-family: 'Ionicons';
+      font-size: 2rem;
+      position: absolute;
+      z-index: 100;
+      left: 1rem;
+      top: 0.25rem;
+    }
+  }
+
+  .dropdown {
+    min-width: 7rem;
+  }
+
+  .dropdown-menu {
+    width: auto;
+  }
+
+  //.form-group label {
+  //  padding: 0 0 0.75rem;
+  //}
+
+  ngb-rating {
+    outline: none;
+  }
+
+  ngb-rating i {
+    color: nb-theme(color-success);
+    @include nb-for-theme(cosmic) {
+      color: nb-theme(color-primary);
+    }
+  }
+
+  @include media-breakpoint-down(xs) {
+    nb-tabset /deep/ul {
+      font-size: 1rem;
+      padding: 0 0.25rem;
+    }
+    button:not(.btn-icon) {
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+    }
+  }
+
+}
+.nb-icons {
+  padding: 0.75rem 0;
+  font-size: 2rem;
+}
+
+a.icon-container {
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+}

@@ -1,0 +1,158 @@
+<div class="modal-header">
+  Filter Customers
+</div>
+<div class="modal-body">
+  <!-- <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_code">By Code</label>
+    <ng-select
+      [ngClass]="{'error': serverErrors['customer_code']}"
+      [items]="list_customer_code"
+      bindLabel="key"
+      bindValue="value"
+      id="select_code"
+      placeholder="Select Code ( Optional )"
+      formControlName="customer_code"
+      appendTo="body"
+      [multiple]="true"
+      (change)="changeCode($event)"></ng-select>    
+  </div> -->
+
+  <!-- <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="contain">text contain (name or address)</label>    
+    <input
+      type="text"
+      class="form-control"
+      formControlName="contain"
+      id="contain"
+      name="contain"
+      placeholder="input customer name contain text">
+  </div> -->
+
+  <!-- <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_name">By Name</label>
+    <ng-select
+      [ngClass]="{'error': serverErrors['name']}"
+      [items]='list_customer_name'
+      bindLabel='name'
+      bindValue='name'
+      id="select_name"
+      placeholder="Select Name ( Optional )"
+      formControlName="customer_name"
+      appendTo="body"
+      [multiple]="true"
+      [loading]="dropdownLoading"
+      (open)="initDropdownCustomer()"
+      (change)="changeName($event)"></ng-select>
+      <small class="form-text" *ngIf="serverErrors['name']">{{serverErrors['name']}}</small>
+  </div> -->
+
+  <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_parent">By Parent Code</label>
+    <ng-select
+      [items]="list_customer_parent"
+      bindLabel="key"
+      bindValue="value"
+      id="select_parent"
+      placeholder="Select Parent Code ( Optional )"
+      formControlName="customer_parent"
+      appendTo="body"
+      [multiple]="true"
+
+      (change)="changeParent($event)"></ng-select>    
+  </div>
+
+  <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_category">By Category label</label>
+    <ng-select
+      [items]="list_category"
+      bindLabel="key"
+      bindValue="value"
+      id="select_category"
+      placeholder="Select Category ( Optional )"
+      formControlName="category"
+      appendTo="body"
+      [multiple]="true"
+      (change)="changeCategory($event)"></ng-select>
+  </div>
+
+  <!-- <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_address">By Address Contain Text</label>
+    <ng-select
+      [items]="list_customer_address"
+      bindLabel="key"
+      bindValue="value"
+      id="select_address"
+      placeholder="Select Address that contian text ( Optional )"
+      formControlName="address"
+      appendTo="body"
+      [multiple]="false"
+      (change)="changeAddress($event)"></ng-select>    
+  </div> -->
+
+  <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_type_filter">Filter By</label>
+    <!--suppress XmlDuplicatedId -->
+    <ng-select
+      [ngClass]="{'error': serverErrors['data_filter_by']}"
+      [items]='dataFilterBy'
+      bindLabel="name"
+      bindValue="code"
+      id="select_type_filter"
+      placeholder="Select Filter By"
+      formControlName="data_filter_by"
+      appendTo="body" [loading]="false"
+      [clearable]="false"
+      (change)="changeFilterBy()"></ng-select>
+    <small class="form-text" *ngIf="serverErrors['data_filter_by']">{{serverErrors['data_filter_by']}}</small>
+  </div>
+  <div class="row" *ngIf="filterByRange">
+    <div class="col-md-6">
+      <div class="form-group" [formGroup]="dataFormCloned">
+        <label for="select_date_start">Date From</label>
+        <!--suppress XmlDuplicatedId -->
+        <div class="input-group">
+          <!--suppress XmlDuplicatedId -->
+          <input id="select_date_start" class="form-control" style="float:none" placeholder="Select Date From"
+                 name="select_date_start" ngx-mydatepicker
+                 value="{{dataFormCloned.controls['date_start'].value | date:'mediumDate'}}"
+                 [options]="dateConfigurationStart"
+                 [ngClass]="{'form-control form-control-danger': serverErrors['date_start'], 'form-control': true}"
+                 #dp_start="ngx-mydatepicker" (dateChanged)="onDateStartChanged($event)" readonly/>
+          <span class="input-group-append" *ngIf="!isView">
+            <button type="button" class="btn btn-info" (click)="dp_start.toggleCalendar()">
+              <i class="ion ion-calendar"></i>
+            </button>
+          </span>
+        </div>
+        <small class="form-text" *ngIf="serverErrors['date_start']">{{serverErrors['date_start']}}</small>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group" [formGroup]="dataFormCloned">
+        <label for="select_date_end">Date End</label>
+        <!--suppress XmlDuplicatedId -->
+        <div class="input-group">
+          <!--suppress XmlDuplicatedId -->
+          <input id="select_date_end" class="form-control" style="float:none" placeholder="Select Date End"
+                 name="select_date_end" ngx-mydatepicker
+                 value="{{dataFormCloned.controls['date_end'].value | date:'mediumDate'}}"
+                 [options]="dateConfigurationEnd"
+                 [ngClass]="{'form-control form-control-danger': serverErrors['date_end'], 'form-control': true}"
+                 #dp_end="ngx-mydatepicker" (dateChanged)="onDateEndChanged($event)" readonly/>
+          <span class="input-group-append" *ngIf="!isView">
+            <button type="button" class="btn btn-info" (click)="dp_end.toggleCalendar()">
+              <i class="ion ion-calendar"></i>
+            </button>
+          </span>
+        </div>
+        <small class="form-text" *ngIf="serverErrors['date_end']">{{serverErrors['date_end']}}</small>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+<div class="modal-footer">
+  <button class="btn btn-md btn-success" type="submit" (click)="filterNow()">Filter</button>
+  <button class="btn btn-md btn-danger" (click)="closeModal()">Cancel</button>
+</div>

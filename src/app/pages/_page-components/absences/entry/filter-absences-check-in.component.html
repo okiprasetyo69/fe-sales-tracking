@@ -1,0 +1,31 @@
+<div class="modal-header">
+ Report Check In
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group" [formGroup]="dataFormCloned">
+        <label for="select_date_start">Choose Date </label>
+        <div class="input-group">
+          <input id="select_date_start" class="form-control" style="float:none" placeholder="Select Date Start"
+                 name="select_date_start" ngx-mydatepicker
+                 value="{{dataFormCloned.controls['date_start'].value | date:'mediumDate'}}"
+                 [options]="dateConfigurationStart"
+                 [ngClass]="{'form-control form-control-danger': serverErrors['date_start'], 'form-control': true}"
+                 #dp_start="ngx-mydatepicker" (dateChanged)="onDateStartChanged($event)" readonly/>
+          <span class="input-group-append">
+            <button type="button" class="btn btn-info" (click)="dp_start.toggleCalendar()">
+              <i class="ion ion-calendar"></i>
+            </button>
+          </span>
+        </div>
+        <small class="form-text" *ngIf="serverErrors['date_start']">{{serverErrors['date_start']}}</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-md btn-primary" type="submit" (click)="exportCheckInAbsence()">Export</button>
+  <button class="btn btn-md btn-danger" (click)="closeModal()">Cancel</button>
+</div>

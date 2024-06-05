@@ -1,0 +1,655 @@
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&isView" class="row">
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary" (click)="dataEdit()">Edit</button>
+  </div>
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary float-right" (click)="back()">Back</button>
+  </div>
+  <div class="col-md-6" *ngIf="isApprovalView">
+    <h1>APPROVAL PREVIEW</h1>
+  </div>
+</div>
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&isView">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingDropdown||isLoadingGeneral"></ngx-form-loading>
+<form [formGroup]="dataForm">
+  <nb-card *ngIf="!(isLoadingDropdown||isLoadingGeneral)">
+    <nb-card-header>Customer > {{method | ngxCapitalize}}</nb-card-header>
+    <toaster-container></toaster-container>
+    <nb-card-body *ngIf="!isLoadingDropdown&&!isLoadingGeneral">
+      <fieldset [disabled]="isSubmitting||isView">
+        <div class="row">
+          <!--left side-->
+          <div class="col-md-6">
+            <div class="form-group" [formGroup]="dataForm">
+              <label for="code">Code</label>
+              <input
+                [ngClass]="{'form-control form-control-danger': serverErrors['code'], 'form-control': true}"
+                type="text"
+                class="form-control"
+                id="code"
+                formControlName="code"
+                name="code"
+                placeholder="Code"
+                [readonly]="method != 'create'"
+                (input)="codeOnType()"/>
+              <small class="form-text" *ngIf="serverErrors['code']">{{serverErrors['code']}}</small>
+            </div>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Name"
+              field="name"
+              [error]="serverErrors"
+            ></ngx-form-input-md>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Email"
+              field="email"
+              [error]="serverErrors"
+              *ngIf="false"
+            ></ngx-form-input-md>
+
+            <!--for scrolling after hide map-->
+            <div id="address_input"></div>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Phone"
+              field="phone"
+              [error]="serverErrors"
+            ></ngx-form-input-md>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Address"
+              field="address"
+              [error]="serverErrors"></ngx-form-input-md>
+
+            <div class="row">
+              <div class="col-md-4">
+                <ngx-form-input-md
+                  [group]="dataForm"
+                  type="text"
+                  label="Latitude"
+                  field="lat"
+                  [error]="serverErrors"></ngx-form-input-md>
+              </div>
+              <div class="col-md-4">
+                <ngx-form-input-md
+                  [group]="dataForm"
+                  type="text"
+                  label="Longitude"
+                  field="lng"
+                  [error]="serverErrors"></ngx-form-input-md>
+              </div>
+              <div class="col-md-4">
+                <label>Pick from map</label>
+                <br/>
+                <button type="button" class="btn btn-hero-primary" (click)="pickMap()" *ngIf="!isView">show map</button>
+                <a href="javascript:void(0)" (click)="pickMap()" *ngIf="isView">show map</a>
+              </div>
+            </div>
+
+          </div>
+          <!--end of left side-->
+
+          <!--right side-->
+          
+          <!-- Hide -->
+          <div class="col-md-6">
+            <!-- custom field category customer -->
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="select"
+              label="Category"
+              field="category"
+              [dataSelect]="dropdownCategory"
+              dataSelectKey="key"
+              dataSelectLabel="value"
+              [error]="serverErrors"
+            ></ngx-form-input-md>
+            <!-- custom field end -->
+            <ngx-form-input-md
+              *ngIf="false"
+              [group]="dataForm"
+              type="select-multiple"
+              label="Business Activity"
+              field="business_activity"
+              [dataSelect]="dropdownBusinessActivity"
+              dataSelectKey="key"
+              dataSelectLabel="value"
+              [error]="serverErrors"
+            ></ngx-form-input-md>
+
+            <!-- Hide -->
+            <div class="form-group" [formGroup]="dataForm" *ngIf="false">
+              <label for="nfcid">NFC</label>
+              <input
+                type="text"
+                class="form-control"
+                [ngClass]="{'form-control form-control-danger': serverErrors['nfcid'], 'form-control': true}"
+                id="nfcid"
+                name="nfcid"
+                formControlName="nfcid"
+                [(ngModel)]="codeCustomer"
+                placeholder="NFC"
+                readonly/>
+              <small class="form-text" *ngIf="serverErrors['nfcid']">{{serverErrors['nfcid']}}</small>
+            </div>
+
+            <ngx-form-input-md
+              *ngIf="false"
+              [group]="dataForm"
+              type="text"
+              label="Username"
+              field="username"
+              [error]="serverErrors"></ngx-form-input-md>
+
+            <ngx-form-input-md
+              *ngIf="false"
+              [group]="dataForm"
+              type="password"
+              label="Password"
+              field="password"
+              [error]="serverErrors"></ngx-form-input-md>
+
+            <div *ngIf="method != 'view'">
+              <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="is-branch" formControlName="is_branch"
+                         [checked]="isBranch" [(ngModel)]="isBranch" (change)="checkIsBranch()">
+                  <label class="custom-control-label" for="is-branch">Is Branch</label>
+                </div>
+              </div>
+              <!--<ngx-form-input-md-->
+              <!--*ngIf="!!isBranch"-->
+              <!--type="select"-->
+              <!--label="Parent Customer"-->
+              <!--field="parent_code"-->
+              <!--[error]="serverErrors"-->
+              <!--disabled=false-->
+              <!--[dataSelect]="dataParent"-->
+              <!--dataSelectKey="id"-->
+              <!--dataSelectLabel="name"-->
+              <!--[group]="dataForm"></ngx-form-input-md>-->
+              <ng-select
+                *ngIf="isBranch && method == 'create'"
+                [items]="dataCustomerSearch"
+                bindValue="code"
+                bindLabel="name"
+                id="parent_id"
+                [loading]="isLoadingDropdownCustomer"
+                placeholder="Select parent"
+                name="parent_id"
+                appendTo="body"
+                [typeahead]="customerInput$"
+                formControlName="parent_code">
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.name}} - {{item.code}} <br/>
+                  <small>{{ (item.address) ? item.address : 'Doesn\'t have an address.'}}</small>
+                </ng-template>
+              </ng-select>
+
+              <fieldset disabled>
+                <div class="form-group" *ngIf="isBranch && method != 'create' && method != 'view' && parent_name != null">
+                  <label for="parent_name">Parent Customer</label>
+                  <input
+                    type="text"
+                    name="parent_name"
+                    value="{{parent_name}}"
+                    class="form-control"
+                    id="parent_name"
+                    readonly>
+                </div>
+              </fieldset>
+              <label for="parent_id" *ngIf="isBranch && method != 'create' && method != 'view' && parent_name != null">Change To</label>
+              <ng-select
+                *ngIf="isBranch && method != 'create' && method != 'view'"
+                [items]="dataCustomerSearch"
+                bindValue="code"
+                bindLabel="name"
+                id="parent_id"
+                [loading]="isLoadingDropdownCustomer"
+                placeholder="Select parent"
+                name="parent_id"
+                appendTo="body"
+                [typeahead]="customerInput$"
+                formControlName="parent_code">
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.name}} - {{item.code}} <br/>
+                  <small>{{ (item.address) ? item.address : 'Doesn\'t have an address.'}}</small>
+                </ng-template>
+              </ng-select>
+
+            </div>
+
+<!--            For View-->
+            <fieldset disabled>
+              <div class="form-group" *ngIf="!branchFalse && method != 'create' && method != 'edit'">
+                <label for="parent_name">Parent Customer</label>
+                <input
+                  type="text"
+                  name="parent_name"
+                  value="{{parent_name}}"
+                  class="form-control"
+                  id="parent_name"
+                  readonly>
+              </div>
+            </fieldset>
+          </div>
+          <!--end of right side-->
+        </div>
+      </fieldset>
+      <!--<button type="button" class="btn btn-primary" [disabled]="dataForm.invalid">Save</button>-->
+
+    </nb-card-body>
+  </nb-card>
+
+  <div id="pickmap_input"></div>
+
+  <!--map picker-->
+  <nb-card *ngIf="isPickMap">
+    <nb-card-body>
+      <div class="form-group" *ngIf="!isView">
+        <input
+          placeholder="Search for location..."
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="off"
+          type="text"
+          class="form-control"
+          #search
+          [formControl]="searchControl"
+          value="{{address}}"/>
+      </div>
+      <agm-map [latitude]="latitude" [longitude]="longitude" [scrollwheel]="false" [zoom]="zoom">
+        <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
+                    (dragEnd)="dragEnd($event)"></agm-marker>
+      </agm-map>
+      <br>
+      <button class="btn btn-outline-primary" (click)="hideMap()" type="button">Hide</button>
+    </nb-card-body>
+  </nb-card>
+
+  <!--end map picker-->
+
+  <nb-card *ngIf="!(isLoadingDropdown || isLoadingGeneral)">
+    <nb-tabset>
+      <nb-tab tabTitle="Branch" *ngIf="branchFalse" [active]="branchFalse">
+        <div *ngIf="!dataBranch?.length">
+          <div class="alert alert-primary" role="alert">
+            This Customer don't have any branch.
+          </div>
+        </div>
+        <div *ngIf="dataBranch?.length">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>No.</th>
+              <th>Branch Name</th>
+              <th>Phone</th>
+              <th>Address</th>
+              <th>Activity</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let data of dataBranch; let i = index">
+              <td>{{i + 1}}</td>
+              <td>{{data.name}}</td>
+              <td>{{data.phone}}</td>
+              <td>{{data.address}}</td>
+              <td>{{data.business_activity | businessActivity}}</td>
+              <td>
+                <a class="icon-container" [routerLink]="['/pages/settings/customers/view',data.code]" target="_blank">
+                  <i class="nb-icons nb-search"></i>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </nb-tab>
+
+      <nb-tab tabTitle="Contact">
+        <div *ngIf="dataForm.value['contacts']?.length == 0 || dataForm.value['contacts'] == null">
+          <div *ngIf="!isCreateContact">
+            <div class="alert alert-primary" role="alert">
+              This Customer don't have any contact.
+            </div>
+            <small class="form-text" style="color: #ff0000;" *ngIf="serverErrors['contacts']">
+              {{serverErrors['contacts']}}
+            </small>
+            <br *ngIf="serverErrors['contacts']"/>
+            <button class="btn btn-primary" type="button" (click)="dataContactCreate()" *ngIf="!isView">
+              Create New Contact
+            </button>
+          </div>
+        </div>
+        <div *ngIf="isCreateContact">
+          <fieldset [disabled]="isView" [formGroup]="contactForm">
+            <div class="row">
+              <!--left side-->
+              <div class="col-md-6">
+                <ngx-form-input-md
+                  [group]="contactForm"
+                  type="text"
+                  label="Name"
+                  field="name"
+                  [error]="contactErrors"></ngx-form-input-md>
+
+                <!-- Form Email di Hidden -->
+                <ngx-form-input-md
+                  *ngIf="false"
+                  [group]="contactForm"
+                  type="text"
+                  label="Email"
+                  field="email"></ngx-form-input-md>
+
+                <ngx-form-input-md
+                  [group]="contactForm"
+                  type="text"
+                  label="Job Position"
+                  field="job_position"></ngx-form-input-md>
+
+                <ngx-form-input-md
+                  [group]="contactForm"
+                  type="textarea"
+                  label="Note"
+                  field="note"></ngx-form-input-md>
+
+              </div>
+              <!--end of left side-->
+
+              <!-- right side -->
+              <div class="col-md-6">
+                <ngx-form-input-md
+                  [group]="contactForm"
+                  type="text"
+                  label="Phone"
+                  field="phone"></ngx-form-input-md>
+
+                <ngx-form-input-md
+                  [group]="contactForm"
+                  type="text"
+                  label="Mobile"
+                  field="mobile"></ngx-form-input-md>
+
+              </div>
+              <!-- end of right side -->
+            </div>
+
+            <!-- Hidden Form Di Bawah -->
+            <div formGroupName="notifications" *ngIf="false">
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Module</th>
+                  <th>Activity</th>
+                  <th>Via email notif.</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>Order</td>
+                  <td>Request order confirmation</td>
+                  <td>
+                    <nb-checkbox formControlName="request_order_create"></nb-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>Request return order confirmation</td>
+                  <td>
+                    <nb-checkbox formControlName="sales_order_return"></nb-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>Order status changed</td>
+                  <td>
+                    <nb-checkbox formControlName="sales_order_status_changed"></nb-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Delivery</td>
+                  <td>Order delivered confirmation</td>
+                  <td>
+                    <nb-checkbox formControlName="delivery_received"></nb-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>Order rejected confirmation</td>
+                  <td>
+                    <nb-checkbox formControlName="delivery_rejected"></nb-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Payment</td>
+                  <td>Invoice reminder</td>
+                  <td>
+                    <nb-checkbox formControlName="invoice_reminder"></nb-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>Payment recived</td>
+                  <td>
+                    <nb-checkbox formControlName="payment_received"></nb-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>Payment confirmation</td>
+                  <td>
+                    <nb-checkbox formControlName="payment_confirmation"></nb-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>Payment receipt can not be printed</td>
+                  <td>
+                    <nb-checkbox formControlName="payment_receipt_not_read"></nb-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>NFC can not read</td>
+                  <td>
+                    <nb-checkbox formControlName="nfc_not_read"></nb-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Visit plan</td>
+                  <td>Visit plan reminder</td>
+                  <td>
+                    <nb-checkbox formControlName="visit_plan_reminder"></nb-checkbox>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </fieldset>
+          <button type="button" class="btn btn-hero-primary" (click)="addContact(contactForm.value)"
+                  *ngIf="!isEditContact && !isView">Add Contact
+          </button>
+          <button type="button" class="btn btn-hero-primary" (click)="editContact(contactForm.value)"
+                  *ngIf="isEditContact">Edit Contact
+          </button>
+          <button type="button" class="btn btn-hero-primary" (click)="backContact()">Back</button>
+        </div>
+        <div *ngIf="dataForm.value['contacts']?.length > 0">
+          <div *ngIf="!isCreateContact">
+            <button class="btn btn-primary" type="button" (click)="dataContactCreate()" *ngIf="!isView">
+              Create New Contact
+            </button>
+            <br *ngIf="!isView">
+            <br *ngIf="!isView">
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th>No.</th>
+                <th>Contact Name</th>
+                <th>Phone</th>
+                <th>Mobile</th>
+                <th>Job position</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let data of dataForm.value['contacts']; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{data.name}}</td>
+                <td>{{data.phone}}</td>
+                <td>{{data.mobile}}</td>
+                <td>{{data.job_position}}</td>
+                <td>
+                  <a class="icon-container" href="javascript:void(0)">
+                    <i class="nb-icons nb-search" (click)="dataContactView(i)" *ngIf="isView"></i>
+                  </a>
+                  <a class="icon-container" href="javascript:void(0)">
+                    <i class="nb-icons nb-edit" (click)="dataContactEdit(i)" *ngIf="!isView"></i>
+                  </a>
+                  <a class="icon-container" href="javascript:void(0)">
+                    <i class="nb-icons nb-trash" (click)="dataContactDelete(i)" *ngIf="!isView"></i>
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </nb-tab>
+      <nb-tab tabTitle="Request Order" *ngIf="method != 'create'">
+        <table datatable [dtOptions]="dtOptions" class="table table-striped">
+          <thead>
+          <tr>
+            <th>No.</th>
+            <th>Date</th>
+            <th>Branch</th>
+            <th>No. Request Order</th>
+            <th>Address</th>
+            <th>Sales Rep.</th>
+            <th>Order Type</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let data of datasets; let i = index">
+            <td>{{i + 1}}</td>
+            <!-- @TODO: Fix harusnya ada medium date -->
+            <td>{{data.date}}</td>
+            <td>{{data.user?.branch_name}}</td>
+            <td>{{data.code}}</td>
+            <td>{{data.customer.address}}</td>
+            <td>{{data.user?.employee_name}}</td>
+            <td>{{data.is_special_order ? 'Special' : 'Reguler'}}</td>
+            <td>
+              <a class="icon-container" href="javascript:void(0)">
+                <i class="nb-icons nb-search" (click)="dataView(data.id)"></i>
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </nb-tab>
+      <nb-tab tabTitle="History Deliveries" *ngIf="method != 'create'">
+        <table datatable [dtOptions]="dtOptionsDelivery" class="table table-striped">
+          <thead>
+          <tr>
+            <th>No</th>
+            <th>Date</th>
+            <th>Packing slip code</th>
+            <th>Delivered by</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let data of datasetsDeliveries;let i = index">
+            <td>{{ (i + 1) }}</td>
+            <td>{{ data.delivery_date }}</td>
+            <td>{{ data.packing_slip_code }}</td>
+            <td>{{ data.user.name }}</td>
+            <td>
+              <span *ngIf="data.is_accepted == 1">Accepted</span>
+              <span *ngIf="data.is_rejected == 1">Rejected</span>
+            </td>
+            <td>
+              <a class="icon-container" href="javascript:void(0)">
+                <i class="nb-icons nb-search" (click)="dataViewDelivery(data.packing_slip_code)"></i>
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </nb-tab>
+      <nb-tab tabTitle="Competitors">
+        <div *ngIf="competitorPhotos.length != 0">
+          <table>
+            <tr>
+              <th>Note</th>
+              <th>Create Date</th>
+              <td align="right"><b>Image</b></td>
+            </tr>
+            <tr *ngFor="let x of competitorPhotos;">
+              <td align="top">
+                <p style="margin-top: 20px">{{ x.note }}</p>
+              </td>
+              <td align="top">
+                <p style="margin-top: 20px">{{ x.create_date }}</p>
+              </td>
+              <td align="right">
+                <img [src]="x.image" width="150" style="margin-top: 20px" (click)="openNewTab(x.base64)">
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="alert alert-primary" role="alert" *ngIf="competitorPhotos.length == 0">
+          No Competitor Exists
+        </div>
+      </nb-tab>
+    </nb-tabset>
+  </nb-card>
+  <div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView">
+    <div *ngIf="!isSubmitting">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveData(dataForm, 'continue')"
+        *ngIf="!isView&&!(method == 'create')">
+        Save & Continue<i class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveData(dataForm, 'close')"
+        *ngIf="!isView">Save &
+        Close <i class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+      </button>
+      <button
+        *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView"
+        [disabled]="isSubmitting"
+        type="button"
+        class="btn btn-danger"
+        (click)="back()">
+        Back <i class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+      </button>
+    </div>
+    <div *ngIf="isSubmitting">
+      <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+    </div>
+  </div>
+</form>
+
+<!--<ngx-dev-mode [dataJson]="notificationForm.value" title="Notification Form"></ngx-dev-mode>-->
+<ngx-dev-mode [dataJson]="dataForm.value" title="Data Form"></ngx-dev-mode>
+<ngx-dev-mode [dataJson]="contactForm.value" title="Contact Form"></ngx-dev-mode>

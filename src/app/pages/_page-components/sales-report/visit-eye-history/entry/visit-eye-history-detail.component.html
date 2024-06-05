@@ -1,0 +1,67 @@
+<div class="modal-header">
+  <span>Visit Eye History Detail</span>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <label>Name</label>
+    <input type="text" class="form-control" [readOnly]="true" [value]="customer.name"/>
+  </div>
+  <div class="form-group">
+    <label>Address</label>
+    <textarea class="form-control" [readOnly]="true">{{customer.address}}</textarea>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Latitude</label>
+        <input type="text" class="form-control" [readOnly]="true" [value]="customer.lat"/>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Longitude</label>
+        <input type="text" class="form-control" [readOnly]="true" [value]="customer.lng"/>
+      </div>
+    </div>
+  </div>
+  <nb-tabset>
+    <nb-tab tabTitle="Contacts">
+      <br/>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Job Position</th>
+          <th>Note</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let x of customer.contacts">
+          <td>{{x.name}}</td>
+          <td>{{x.phone}}</td>
+          <td>{{x.email}}</td>
+          <td>{{x.job_position}}</td>
+          <td>{{x.note}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </nb-tab>
+    <nb-tab tabTitle="Map">
+      <br/>
+      <agm-map [latitude]="customer.lat" [longitude]="customer.lng" [zoom]="10" [streetViewControl]="false">
+        <agm-marker [latitude]="customer.lat" [longitude]="customer.lng">
+          <agm-info-window>
+            <strong style="color: #000;">{{customer.name}}</strong>
+            <hr/>
+            <p style="color:#000;">{{customer.address}}</p>
+          </agm-info-window>
+        </agm-marker>
+      </agm-map>
+    </nb-tab>
+  </nb-tabset>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-md btn-danger" (click)="closeModal()">Close</button>
+</div>

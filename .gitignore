@@ -1,0 +1,89 @@
+# compiled output
+/dist
+/tmp
+/out-tsc
+
+# root directory
+dist*
+.editorconfig
+.stylelintrc*
+.travis*
+angular.json
+CHANGELOG*
+CODE_OF_CONDUCT*
+CONTRIBUTING*
+DEV_DOCS*
+karma*
+LICENSE
+package*
+protractor*
+README*
+tsconfig*
+tslint*
+report*
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+/docs
+
+# e2e
+/e2e/*
+
+# System Files
+.DS_Store
+Thumbs.db
+/nbproject/private/
+package-lock\.json
+tslint.json
+
+# source directory
+/src/assets/*
+/src/environments/*
+/src/uploads/*
+
+Backups
+Cache
+CachedData/e5a624b788d92b8d34d1392e4c4d9789406efe8f
+CachedExtensions
+Code Cache
+Crash Reports
+GPUCache
+Local Storage/leveldb
+Session Storage
+User
+exthost Crash Reports
+logs/20201217T101256
+Cookies
+Cookies-journal
+Network Persistent State
+TransportSecurity
+languagepacks.json
+machineid
+rapid_render.json
+storage.json
+
+node_modules
+*.zip
+*.7z
+src.*

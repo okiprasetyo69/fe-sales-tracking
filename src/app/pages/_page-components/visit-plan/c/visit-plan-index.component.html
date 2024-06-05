@@ -1,0 +1,29 @@
+<nb-card>
+  <nb-card-header>Visit Plan
+    <div class="float-right">
+      <ngx-filter-button [indexTable]="indexTable"></ngx-filter-button>
+    </div>
+  </nb-card-header>
+  <toaster-container></toaster-container>
+
+  <nb-card-body>
+    <button class="btn btn-primary" type="button" routerLink="/pages/sales/activities/visit_plan/generate">
+      Generate
+    </button>
+    <button class="btn btn-primary" type="button" routerLink="/pages/sales/activities/visit_plan/create">
+      Create Daily Plan
+    </button>
+    <br>
+    <br>
+    <ngx-index-table
+      [endPoint]="endPoint"
+      [urlReplacement]="replacement"
+      [tableData]="tableData"
+      [actionButton]="actionButton"
+      [withAction]="true"
+      [withNumber]="true"
+      [withApproval]="true"
+      #indexTable></ngx-index-table>
+  </nb-card-body>
+
+</nb-card>

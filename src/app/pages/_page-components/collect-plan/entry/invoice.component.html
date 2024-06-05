@@ -1,0 +1,73 @@
+<div class="modal-header">
+  <h4>Invoice</h4>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+    <label for="select_employee_id">Invoice</label>
+    <ng-select
+      [items]='dropdownInvoice'
+      bindLabel="combined_name"
+      bindValue="invoice_code"
+      id="select_employee_id"
+      [(ngModel)]="invoice_id"
+      placeholder="Select Invoice"
+      name="invoice"
+      appendTo="body"
+      [searchFn]="ngSelectSearchInvoice"
+      [loading]="invoiceLoading">
+    </ng-select>
+  </div>
+
+  <button
+    class="btn btn-primary"
+    *ngIf="invoice_id"
+    (click)="addInvoice()">Add Invoice
+  </button>
+  <br *ngIf="invoice_id"/>
+  <hr *ngIf="invoice_id"/>
+  <div class="alert alert-primary" role="alert" *ngIf="idUser == null">
+    Please select user for add invoice.
+  </div>
+  <br *ngIf="idUser == null"/>
+  <div class="alert alert-primary" role="alert" *ngIf="dataForm.controls['invoice_id'].value.length == 0">
+    You don't have any invoice.
+  </div>
+
+<!--  <input type="text" class="form-control" placeholder="Search invoice code..."-->
+<!--         *ngIf="dataForm.controls['invoice_id'].value.length != 0" (input)="searchInvoiceField()"-->
+<!--         [(ngModel)]="searchInvoice" name="searchInvoice"/>-->
+  <br/>
+
+  <div *ngIf="searchInvoice == ''">
+    <table class="table table-striped" *ngIf="dataForm.controls['invoice_id'].value.length != 0">
+      <thead>
+      <tr>
+        <th style="width: 20px;">No</th>
+        <th>Invoice No.</th>
+        <th>Customer</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of dataForm.controls['invoice_id'].value; let i = index">
+        <td>{{i + 1}}</td>
+        <td>{{data.id_invoice}}</td>
+        <td>{{data.id_invoice | CustomerName: dropdownInvoice}}</td>
+        <td>
+          <a class="icon-container" href="javascript:void(0)" *ngIf="data.is_confirm != 1">
+            <i class="nb-icons nb-trash" (click)="dataInvoiceDelete(data.id_invoice)"></i>
+          </a>
+          <a class="icon-container" href="javascript:void(0)" *ngIf="data.is_confirm == 1">
+            <i class="nb-icons nb-checkmark"></i>
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button class="btn btn-md btn-success" (click)="proses()" *ngIf="!hideSaveButton">Save</button>
+  <button class="btn btn-md btn-danger" (click)="closeModal()">Close</button>
+</div>

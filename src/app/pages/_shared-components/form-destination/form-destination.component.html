@@ -1,0 +1,176 @@
+<div
+  *ngIf="(formDestination.controls['start_route_branch_id'].value != null && formDestination.controls['end_route_branch_id'].value != null) || !isView">
+  <ngx-form-input-md
+    field="is_using_route"
+    [group]="formDestination"
+    label="Use Route"
+    type="checkbox"
+    [error]="serverErrors"
+    [check]="usingRouteBoolean"
+    [isView]="isView"
+    (checkboxChange)="checkBoxChange($event)"
+  ></ngx-form-input-md>
+  <div class="row">
+    <!--left side-->
+    <div class="col-md-6">
+      <ngx-form-input-md
+        [group]="formDestination"
+        [dataSelect]="branchDropdown"
+        dataSelectLabel="name"
+        dataSelectKey="id"
+        field="start_route_branch_id"
+        label="Select Branch Start Route"
+        type="select"
+        [showLoading]="branchDropdownLoading"
+        (actionOpen)="openDropdownBranch()"
+        (actionChange)="changeStartBranch()"
+        [error]="serverErrors"
+      ></ngx-form-input-md>
+    </div>
+    <!--end of left side-->
+
+    <!-- right side -->
+    <div class="col-md-6">
+      <ngx-form-input-md
+        [group]="formDestination"
+        [dataSelect]="branchDropdown"
+        dataSelectLabel="name"
+        dataSelectKey="id"
+        field="end_route_branch_id"
+        label="Select Branch End Route"
+        type="select"
+        [showLoading]="branchDropdownLoading"
+        (actionOpen)="openDropdownBranch()"
+        (actionChange)="changeEndBranch()"
+        [error]="serverErrors"
+      ></ngx-form-input-md>
+    </div>
+    <!-- end of right side -->
+  </div>
+  <div class="row" *ngIf="planModelInSystem != null">
+    <div class="col-md-12" *ngIf="planModelInSystem.isOrNotStartStopFromBranch()">
+      This plan doesn't {{ planModelInSystem.isAndNotStartStopFromBranch() ? "Start and Stop" : (
+        this.planModelInSystem.isOrNotStartStopFromBranch() ? (
+                this.planModelInSystem.isNotStartFromBranch() ? "Start" : "Stop"
+            ) :
+            "Unknown") }} on selected branch above, instead with location below
+    </div>
+  </div>
+  <div class="row" *ngIf="planModelInSystem != null">
+    <div class="col-md-12" *ngIf="planModelInSystem.isOrNotStartStopFromBranch()">
+      <textarea class="form-control" [disabled]="true">
+        {{ this.planModelInSystem.isNotStartFromBranch() ? "Start From " + this.planModelInSystem.start_custom_location.address : ""}}
+        {{ this.planModelInSystem.isNotStopFromBranch() ? "Stop In " + this.planModelInSystem.stop_custom_location.address : ""}}
+      </textarea>
+    </div>
+  </div>
+  <div class="row" *ngIf="!isView">
+    <div class="col-md-6">
+      <ngx-form-input-md
+        [group]="formTempDestination"
+        field="customer_code"
+        [label]="labelDestination"
+        type="select-destination-customer"
+        [isError]="isErrorDestination"
+        [errorMessage]="isErrorDestinationMessage"
+        [error]="serverErrors"
+        (customerVariable)="setCustomerGet($event)"
+      ></ngx-form-input-md>
+      <ngx-form-input-md
+        field="note"
+        [group]="formTempDestination"
+        label="Note"
+        type="text"
+        [error]="serverErrors"
+      ></ngx-form-input-md>
+    </div>
+    <div class="col-md-6" *ngIf="withOrder">
+      <div *ngIf="usingRouteBoolean">
+        <ngx-form-input-md
+          field="order_route"
+          [group]="formTempDestination"
+          label="Order Route"
+          type="text"
+          [error]="serverErrors"
+        ></ngx-form-input-md>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="!isView">
+    <div class="col-md-6">
+      <button type="button" class="btn btn-primary" (click)="saveDestination()" *ngIf="!isErrorDestination">
+        {{ (formTempDestination.controls['mode'].value) ? 'Edit' : 'Add' }}
+      </button>
+      <button type="button" class="btn btn-primary" (click)="clearDestination()"
+              *ngIf="!isErrorDestination&&this.formTempDestination.controls['mode'].value">
+        Cancel
+      </button>
+    </div>
+  </div>
+  <br/>
+
+  <div
+    class="alert alert-primary" role="alert"
+    *ngIf="formDestination.controls['destination'].value == 0&&!isErrorDestination">
+    You don't have any destination.
+  </div>
+
+  <!-- destinations table -->
+  <br *ngIf="formDestination.controls['destination'].value.length != 0&& !isErrorDestination">
+  <div *ngIf="formDestination.controls['destination'].value != 0 && !isErrorDestination">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>No.</th>
+        <th>Destinations</th>
+        <th *ngIf="withOrder&&usingRouteBoolean">Order Route</th>
+        <th>Note</th>
+        <th>Address</th>
+        <th *ngIf="!isView">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of formDestination.controls['destination'].value; let i = index">
+        <td>{{i + 1}}</td>
+        <td>{{ data.customer_code | DestinationName: customerListData }}{{ data.customer_code }}</td>
+        <td *ngIf="withOrder&&usingRouteBoolean">{{ (data.order_route == null) ? '--' : data.order_route }}</td>
+        <td>{{ (data.note == null) ? '--' : data.note}}</td>
+        <td>{{ data.customer_code | AddressCustomer: customerListData}}</td>
+        <td *ngIf="!isView">
+          <a class="icon-container" href="javascript:void(0)" *ngIf="!isView">
+            <i class="nb-icons nb-edit" (click)="editDestination(data, i)"></i>
+          </a>
+          <a class="icon-container" href="javascript:void(0)" *ngIf="!isView">
+            <i class="nb-icons nb-trash" (click)="deleteDestination(i)"></i>
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div *ngIf="!loadingGenerate&&!isView">
+      <button type="button" class="btn btn-primary"
+              (click)="generateRoutes()">{{ (usingRouteBoolean) ? "Generate Route" : "Draw Pin Point"}}</button>
+      <button type="button" class="btn btn-primary" (click)="showMap()">View Routes On Map</button>
+    </div>
+    <div *ngIf="loadingGenerate">
+      <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+    </div>
+  </div>
+  <div *ngIf="isErrorDestination">
+    <label>List Destination</label>
+    <div class="alert alert-danger" role="alert">
+      {{ isErrorDestinationMessage }}
+    </div>
+  </div>
+  <small class="form-text" *ngIf="serverErrors['destination']"
+         style="color: #ff0000;">{{serverErrors['destination'] | ParseError}}</small>
+  <br/>
+  <ngx-route-map [routeLineShow]="usingRouteBoolean"></ngx-route-map>
+</div>
+
+<div
+  *ngIf="(formDestination.controls['start_route_branch_id'].value == null && formDestination.controls['end_route_branch_id'].value == null) && isView">
+  <div class="alert alert-danger" role="alert">
+    This {{ (isCycle) ? 'Cycle' : 'Plan' }} have no destination.
+  </div>
+</div>

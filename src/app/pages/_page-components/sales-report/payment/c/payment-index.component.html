@@ -1,0 +1,58 @@
+<nb-card>
+  <nb-card-header>
+    Report Payment ( {{dateStringTitle}} )
+    <div class="float-right">
+      <button class="btn btn-sm btn-success" (click)="exportExcel()">
+        <i class="fa fa-file-excel"></i>
+      </button>
+      <button class="btn btn-sm btn-success" (click)="exportPdf()">
+        <i class="fa fa-file-pdf"></i>
+      </button>
+      <button class="btn btn-sm btn-success" (click)="print()">
+        <i class="fa fa-print"></i>
+      </button>
+      &nbsp;&nbsp;
+      <button class="btn btn-sm btn-danger" (click)="dataFilter()">
+        <i class="fa fa-filter"></i>
+      </button>
+    </div>
+  </nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+      <tr>
+        <th>No.</th>
+        <th>Date</th>
+        <th>Payment No.</th>
+        <th>Customer code</th>
+        <th>Branch</th>
+        <th>Division</th>
+        <th>Sales Rep</th>
+        <th>Invoice amount</th>
+        <th>Payment amount</th>
+        <th>Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of datasets; let i = index">
+        <!--suppress Stylelint -->
+        <td>{{(i + 1) + startNumber }}</td>
+        <!-- @TODO: Fix harusnya ada medium date -->
+        <td>{{data.payment_date}}</td>
+        <td>{{data.code}}</td>
+        <td>{{data.customer_code}}</td>
+        <td>{{data.user?.branch_name}}</td>
+        <td>{{data.user?.division_name}}</td>
+        <td>{{data.user?.employee_name}}</td>
+        <td>{{data.invoice_amount | currency:'IDR '}}</td>
+        <td>{{data.payment_amount | currency:'IDR '}}</td>
+        <td>{{data.payment_status}}</td>
+      </tr>
+      </tbody>
+    </table>
+
+  </nb-card-body>
+
+
+</nb-card>

@@ -1,0 +1,131 @@
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&isView" class="row">
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="submit" class="btn btn-primary" (click)="dataEdit()">Edit</button>
+  </div>
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary float-right" (click)="back()">Back</button>
+  </div>
+  <div class="col-md-6" *ngIf="isApprovalView">
+    <h1>APPROVAL PREVIEW</h1>
+  </div>
+</div>
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&isView">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingDropdown||isLoadingGeneral"></ngx-form-loading>
+<nb-card *ngIf="!(isLoadingDropdown||isLoadingGeneral)">
+  <nb-card-header>Employee > {{feature | ngxCapitalize}} > {{method | ngxCapitalize}}</nb-card-header>
+  <nb-card-body *ngIf="!isLoadingDropdown&&!isLoadingGeneral">
+    <toaster-container></toaster-container>
+    <form [formGroup]="dataForm">
+      <fieldset [disabled]="isSubmitting||isView">
+        <div class="row">
+          <!--left side-->
+          <div class="col-md-6">
+            <ngx-form-input-md
+              [group]="dataForm"
+              [error]="serverErrors"
+              type="text"
+              label="NIP"
+              field="nip"></ngx-form-input-md>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              [error]="serverErrors"
+              type="text"
+              label="Name"
+              field="name"></ngx-form-input-md>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              [error]="serverErrors"
+              type="text"
+              label="Mobile phone"
+              field="phone"></ngx-form-input-md>
+          </div>
+          <!--end of left side-->
+
+          <!-- right side -->
+          <div class="col-md-6">
+            <ngx-form-input-md *ngIf="false"
+              [group]="dataForm"
+              [error]="serverErrors"
+              type="text"
+              label="Email"
+              field="email"></ngx-form-input-md>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              [error]="serverErrors"
+              type="select"
+              label="Job Function"
+              field="job_function"
+              [dataSelect]="job_function_dropdown"
+              dataSelectKey="val"
+              dataSelectLabel="label"
+              (actionChange)="changeJobFunction()"
+            ></ngx-form-input-md>
+
+            <ngx-form-input-md
+              *ngIf="feature == 'sales' || feature == 'collector'"
+              [group]="formCollector"
+              [error]="serverErrors"
+              type="select"
+              label="Collector Type"
+              field="collector" 
+              [dataSelect]="opsiDropdown()"
+              dataSelectKey="value"
+              dataSelectLabel="label"
+              (actionChange)="changeCollector()"
+            ></ngx-form-input-md>
+
+            <div class="form-group" *ngIf="!!this.dataForm.controls['job_function'].value && this.dataForm.controls['job_function'].value == 'supervisor'">
+              <p>Type</p>
+              <div>
+                <div class="row" [formGroup]="formSupervisor">
+                  <div class="col-md-3">
+                    <nb-checkbox formControlName="is_supervisor_sales" name="is_supervisor_sales" (change)="changeSales()">Sales</nb-checkbox>
+                  </div>
+                  <div class="col-md-3">
+                    <nb-checkbox formControlName="is_supervisor_logistic" name="is_supervisor_logistic" (change)="changeLogistic()">Logistic</nb-checkbox>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of right side -->
+        </div>
+      </fieldset>
+    </form>
+  </nb-card-body>
+</nb-card>
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView">
+  <div *ngIf="!isSubmitting">
+    <button
+      *ngIf="(method==='edit')"
+      [disabled]="isSubmitting"
+      type="submit"
+      class="btn btn-primary"
+      (click)="saveData(dataForm.value, 'continue')">Save & Continue <i class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+    </button>
+    <button
+      [disabled]="isSubmitting"
+      type="submit"
+      class="btn btn-primary"
+      (click)="saveData(dataForm.value, 'close')">Save & Close <i class="fa fa-spinner fa-spin fa-fw"
+                                                                  *ngIf="isSubmitting"></i>
+    </button>
+    <button
+      [disabled]="isSubmitting"
+      type="button"
+      class="btn btn-danger"
+      (click)="back()">Back <i class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+    </button>
+  </div>
+  <div *ngIf="isSubmitting">
+    <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+  </div>
+</div>
+<ngx-dev-mode *ngIf="feature == 'sales'" [dataJson]="formCollector.value"></ngx-dev-mode>
+<ngx-dev-mode [dataJson]="dataForm.value"></ngx-dev-mode>
+

@@ -1,0 +1,66 @@
+<nb-card>
+  <nb-card-header>Branches</nb-card-header>
+  <toaster-container></toaster-container>
+
+  <nb-card-body>
+    <div class="row">
+      <div class="col-md-6">
+        <button class="btn btn-primary" type="button" routerLink="/pages/settings/branch/create">
+          Create New Branch
+        </button>
+        <button class="btn btn-primary" type="button" routerLink="/pages/settings/branch/import">
+          Import
+        </button>
+      </div>
+      <!--<div class="col-md-6">-->
+        <!--<div class="float-right">-->
+          <!--<button class="btn btn-danger" type="button" routerLink="/pages/approval">-->
+            <!--Approval-->
+          <!--</button>-->
+        <!--</div>-->
+      <!--</div>-->
+    </div>
+
+    <br>
+    <br>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Created Date</th>
+          <th>Branch Code</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Phone</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of datasets; let i = index">
+          <td>{{(i + 1) + startNumber }}</td>
+          <!-- @TODO: Fix harusnya ada medium date -->
+          <!--<td>{{data.create_date | date: 'mediumDate' }}</td>-->
+          <td>{{data.create_date }}</td>
+          <td>{{data.branch_code }}</td>
+          <td>{{data.name}}</td>
+          <td>{{data.address}}</td>
+          <td>{{data.phone}}</td>
+          <td>
+            <a class="icon-container" href="javascript:void(0)">
+              <i class="nb-icons nb-search" (click)="dataView(data.id)"></i>
+            </a>
+            <a class="icon-container" href="javascript:void(0)">
+              <i class="nb-icons nb-edit" (click)="dataEdit(data.id)"></i>
+            </a>
+            <a class="icon-container" href="javascript:void(0)" *ngIf="data.id !== 1">
+              <i class="nb-icons nb-trash" (click)="dataHapus(data.id)"></i>
+            </a>
+            <ngx-index-approval-flag [data]="data"></ngx-index-approval-flag>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+
+</nb-card>

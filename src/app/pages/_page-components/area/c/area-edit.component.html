@@ -1,0 +1,113 @@
+<div *ngIf="isView" class="row">
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="submit" class="btn btn-primary" (click)="dataEdit()">Edit</button>
+  </div>
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary float-right" (click)="back()">Back</button>
+  </div>
+  <div class="col-md-6" *ngIf="isApprovalView">
+    <h1>APPROVAL PREVIEW</h1>
+  </div>
+</div>
+<div *ngIf="isView">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingDropdown||isLoadingGeneral"></ngx-form-loading>
+<nb-card *ngIf="!(isLoadingDropdown||isLoadingGeneral)">
+  <nb-card-header>Area > {{method | ngxCapitalize}}</nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body *ngIf="!isLoadingDropdown&&!isLoadingGeneral">
+    <fieldset [disabled]="isSubmitting||isView">
+      <form [formGroup]="dataForm">
+        <div class="row">
+          <!--left side-->
+          <div class="col-md-6">
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Area Name"
+              field="name"
+              [error]="serverErrors"></ngx-form-input-md>
+          </div>
+          <!--end of left side-->
+          <!--right side-->
+          <div class="col-md-6">
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Description"
+              field="description"
+              [error]="serverErrors"></ngx-form-input-md>
+          </div>
+          <!--end of right side-->
+        </div>
+
+        <div class="row">
+          <!--left side-->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="marker_color">Marker color</label>
+              <div class="input-group">
+                <span class="input-group-addon success" [style.background]="color"></span>
+                <input
+                  [ngClass]="{'form-control form-control-danger col-md-4': serverErrors['marker_color'], 'form-control': true}"
+                  [(colorPicker)]="color"
+                  [ngModel]="color"
+                  formControlName="marker_color" id="marker_color"
+                  (keydown.enter)="$event.preventDefault()"/>
+                <small class="form-text" *ngIf="serverErrors['marker_color']">{{serverErrors['marker_color']}}</small>
+              </div>
+            </div>
+          </div>
+          <!--end of left side-->
+          <!--right side-->
+          <div class="col-md-6">
+
+          </div>
+          <!--end of right side-->
+        </div>
+
+      </form>
+
+      <!--map picker-->
+
+      <agm-map [latitude]="latitude" [longitude]="longitude" [scrollwheel]="true" [zoom]="zoom"
+               (mapClick)="newPolyLine($event)" *ngIf="true">
+        <agm-polyline [editable]="!isView" (lineClick)="lineClicked($event)">
+          <agm-polyline-point *ngFor="let data of polyPath"
+                              [latitude]="data.lat"
+                              [longitude]="data.lng">
+          </agm-polyline-point>
+        </agm-polyline>
+        <agm-polygon [paths]="polygonPath" [editable]="!isView" [polyDraggable]="!isView" [fillColor]="color"
+                     [strokeColor]="color">
+        </agm-polygon>
+      </agm-map>
+    </fieldset>
+  </nb-card-body>
+</nb-card>
+
+<!--end map picker-->
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView">
+  <div *ngIf="!isSubmitting">
+    <button *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView&&(method != 'create')" [disabled]="isSubmitting"
+            type="submit"
+            class="btn btn-primary" (click)="saveData('continue')">Save & Continue <i
+      class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+    </button>
+
+    <button *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView" [disabled]="isSubmitting" type="submit"
+            class="btn btn-primary" (click)="saveData('close')">Save & Close <i
+      class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+    </button>
+    <button *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView" [disabled]="isSubmitting" type="button"
+            class="btn btn-danger" (click)="back()">Back <i class="fa fa-spinner fa-spin fa-fw"
+                                                            *ngIf="isSubmitting"></i>
+    </button>
+  </div>
+  <div *ngIf="isSubmitting">
+    <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+  </div>
+  <br/>
+</div>
+<ngx-dev-mode [dataJson]="dataForm.value"></ngx-dev-mode>

@@ -1,0 +1,41 @@
+<nb-card>
+  <nb-card-header>Inbox</nb-card-header>
+  <toaster-container></toaster-container>
+
+  <nb-card-body>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+      <tr>
+        <th>No.</th>
+        <th>Create Date</th>
+        <th>From</th>
+        <th>Branch</th>
+        <th>Title</th>
+        <th>Message</th>
+        <th>Category</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of datasets; let i = index;">
+        <td>{{ (i + 1) + startNumber }}</td>
+        <!-- @TODO: Fix harusnya ada medium date -->
+        <!--<td>{{ data.create_date | date: 'mediumDate'}}</td>-->
+        <td>{{ data.create_date }}</td>
+        <td>{{ data.from?.name }}</td>
+        <td>{{ data.from?.branch_name }}</td>
+        <td>{{ data.title }}</td>
+        <td>{{ data.message }}</td>
+        <td>{{ data.category | ngxCapitalize }}</td>
+        <td>
+          <a class="icon-container" href="javascript:void(0)" (click)="view(data)" *ngIf="data.category != 'activities'">
+            <i class="nb-icons nb-search"></i>
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+  </nb-card-body>
+
+</nb-card>

@@ -1,0 +1,30 @@
+<script src="login.component.ts"></script>
+<nb-auth-block>
+  <toaster-container></toaster-container>
+
+  <div class="col-12 text-center">
+    <img src="assets/images/logo_cisangkan.jpg" width="130" height="120" style="margin: 5px 0;"/>
+  </div>
+  
+  <h2 class="title">PT. Cisangkan</h2>
+  <small class="form-text sub-title">Hello! Please sign in with your username</small>
+
+  <form [formGroup]="myForm" (ngSubmit)="doLogin(myForm.value)" autocomplete="nope">
+    <div class="form-group">
+      <label for="username" class="sr-only">Username</label>
+      <input type="text" [ngClass]="{'form-control form-control-danger': serverErrors['username'], 'form-control': true}" formControlName="username" id="username" placeholder="Username">
+      <small class="form-text" *ngIf="serverErrors['username']">{{serverErrors['username']}}</small>
+    </div>
+
+    <div class="form-group">
+      <div class="form-group">
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" [ngClass]="{'form-control form-control-danger': serverErrors['password'], 'form-control': true}" formControlName="password" id="password" placeholder="Password">
+        <small class="form-text" *ngIf="serverErrors['password']">{{serverErrors['password']}}</small>
+      </div>
+    </div>
+    <button [disabled]="isSubmitting" class="btn btn-block btn-hero-success" [class.btn-pulse]="isSubmitting">Sign In</button>
+  </form>
+
+</nb-auth-block>
+

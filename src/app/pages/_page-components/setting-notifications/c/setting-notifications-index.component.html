@@ -1,0 +1,41 @@
+<ngx-form-loading [is_loading]="isLoadingGeneral"></ngx-form-loading>
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-card-header>
+    Settings > Notifications > {{category | ngxCapitalize}}
+  </nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body *ngIf="empty_setting">
+    <div class="alert alert-primary" role="alert">
+      You don't have any notification setting in {{category}}.
+    </div>
+  </nb-card-body>
+
+  <nb-card-body *ngIf="!empty_setting">
+    <fieldset [disabled]="isSubmitting">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <!--<th>Receive email notif.</th>-->
+          <th>Receive app notif.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let setting of settingsData; let i = index">
+          <td>{{setting.activity_name}}</td>
+          <!--<td>-->
+            <!--<nb-checkbox [(ngModel)]="settingsData[i]['receive_email_notification']" (change)="saveValue($event, setting.id, 'receive_email_notification', i)"></nb-checkbox>-->
+          <!--</td>-->
+
+          <td>
+            <nb-checkbox [(ngModel)]="settingsData[i]['receive_app_notification']" (change)="saveValue($event, setting.id, 'receive_app_notification', i)"></nb-checkbox>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </fieldset>
+    <div *ngIf="isSubmitting">
+      <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+    </div>
+  </nb-card-body>
+</nb-card>

@@ -1,0 +1,107 @@
+<div *ngIf="!isLoadingGeneral" class="row">
+  <div class="col-md-6">
+    <button type="button" class="btn btn-primary" (click)="back()">Back</button>
+    <button type="button" class="btn btn-warning" *ngIf="isConfirm == 0 && !isCancel == 1" (click)="confirm()">Confirm Payment</button>
+    <button type="button" class="btn btn-danger" *ngIf="isCancel == 0 && !isConfirm == 1" (click)="cancel()">Cancel Payment</button>
+  </div>
+  <div class="col-md-6">
+    <label *ngIf="isConfirm == 1" class="btn float-right" [ngStyle]="{'color':'#ffffff','background-color':'#00d977'}">Status: Confirmed</label>
+    <label *ngIf="isCancel == 1" class="btn float-right" [ngStyle]="{'color':'#ffffff','background-color':'#ff386a'}">Status: Canceled</label>
+    <label *ngIf="paymentStatus == 'Pending'" class="btn float-right" [ngStyle]="{'color':'#ffffff','background-color':'#7659ff'}">Status: Pending</label>
+  </div>
+</div>
+<div *ngIf="!isLoadingGeneral">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingGeneral"></ngx-form-loading>
+
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-card-header>Payment</nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <ngx-header-detail label="Payment Code" content="{{datasets['code']}}"></ngx-header-detail>
+    <!-- @TODO: Fix harusnya ada medium date -->
+    <ngx-header-detail label="Payment Date" content="{{datasets['payment_date']}}"></ngx-header-detail>
+    <ngx-header-detail label="Invoice Amount" content="{{datasets['invoice_amount'] | currency:'IDR '}}"></ngx-header-detail>
+    <ngx-header-detail label="Payment Amount" content="{{datasets['payment_amount'] | currency:'IDR '}}"></ngx-header-detail>
+    <ngx-header-detail label="Payment Status" content="{{datasets['payment_status']}}"></ngx-header-detail>
+  </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-tabset>
+    <nb-tab tabTitle="Invoice">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>No.</th>
+          <th>Invoice Id</th>
+          <th>Invoice Amount</th>
+          <th>Cash</th>
+          <th>Giro</th>
+          <th>Cheque</th>
+          <th>Transfer</th>
+          <th>Kontrabon</th>
+          <th>Payment Amount</th>
+          <th>Balance</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of invoiceItem; let i = index">
+          <td>{{i + 1}}</td>
+          <td>{{data.invoice_id}}</td>
+          <td style="text-align: right">{{data.invoice_amount | currency: 'IDR '}}</td>
+          <td>
+            <div *ngIf="payment_cash_data[data.invoice_id]">{{payment_cash_data[data.invoice_id]?.total_payment | currency: 'IDR '}}</div>
+          </td>
+          <td style="text-align: right">
+            <div *ngIf="payment_giro_data[data.invoice_id]">{{payment_giro_data[data.invoice_id]?.total_payment | currency: 'IDR '}}</div>
+            <div *ngIf="payment_giro_data[data.invoice_id]">Account name: {{payment_giro_data[data.invoice_id]?.account_name}}</div>
+            <div *ngIf="payment_giro_data[data.invoice_id]">Account no: {{payment_giro_data[data.invoice_id]?.account_no}}</div>
+            <div *ngIf="payment_giro_data[data.invoice_id]">Bank name: {{payment_giro_data[data.invoice_id]?.bank_name}}</div>
+            <div *ngIf="payment_giro_data[data.invoice_id]">Due date: {{payment_giro_data[data.invoice_id]?.due_date}}</div>
+            <div *ngIf="payment_giro_data[data.invoice_id]">Receiver: {{payment_giro_data[data.invoice_id]?.transfer_to}}</div>
+          </td>
+          <td style="text-align: right">
+            <div *ngIf="payment_cheque_data[data.invoice_id]">{{payment_cheque_data[data.invoice_id]?.total_payment | currency: 'IDR '}}</div>
+            <div *ngIf="payment_cheque_data[data.invoice_id]">Account name: {{payment_cheque_data[data.invoice_id]?.account_name}}</div>
+            <div *ngIf="payment_cheque_data[data.invoice_id]">Account no: {{payment_cheque_data[data.invoice_id]?.account_no}}</div>
+            <div *ngIf="payment_cheque_data[data.invoice_id]">Bank name: {{payment_cheque_data[data.invoice_id]?.bank_name}}</div>
+            <div *ngIf="payment_cheque_data[data.invoice_id]">Due date: {{payment_cheque_data[data.invoice_id]?.due_date}}</div>
+          </td>
+          <td style="text-align: right">
+            <div *ngIf="payment_transfer_data[data.invoice_id]">{{payment_transfer_data[data.invoice_id]?.total_payment | currency: 'IDR '}}</div>
+            <div *ngIf="payment_transfer_data[data.invoice_id]">Account name: {{payment_transfer_data[data.invoice_id]?.account_name}}</div>
+            <div *ngIf="payment_transfer_data[data.invoice_id]">Account no: {{payment_transfer_data[data.invoice_id]?.account_no}}</div>
+            <div *ngIf="payment_transfer_data[data.invoice_id]">Bank name: {{payment_transfer_data[data.invoice_id]?.bank_name}}</div>
+            <div *ngIf="payment_transfer_data[data.invoice_id]">Transfer to: {{payment_transfer_data[data.invoice_id]?.transfer_to}}</div>
+          </td>
+          <td style="text-align: right">
+            <div *ngIf="payment_kontrabon_data[data.invoice_id]">{{payment_kontrabon_data[data.invoice_id]?.total_payment | currency: 'IDR '}}</div>
+            <div *ngIf="payment_kontrabon_data[data.invoice_id]">Due date: {{payment_kontrabon_data[data.invoice_id]?.due_date}}</div>
+          </td>
+          <td style="text-align: right">
+            {{data.payment_amount | currency: 'IDR '}}
+          </td>
+          <td style="text-align: right">{{(data.invoice_amount - data.payment_amount) | currency: 'IDR '}}</td>
+        </tr>
+        </tbody>
+        <!--<tfoot>-->
+          <!--<tr>-->
+            <!--<th colspan="2">Total </th>-->
+            <!--<th style="text-align: right">{{ totalInvoiceAmount | currency: 'IDR '}}</th>-->
+            <!--<th style="text-align: right">{{ totalPaymentAmount | currency: 'IDR '}}</th>-->
+            <!--<th style="text-align: right">{{ totalBalance | currency: 'IDR '}}</th>-->
+          <!--</tr>-->
+        <!--</tfoot>-->
+      </table>
+    </nb-tab>
+
+    <nb-tab tabTitle="Uploaded Images">
+      <div class="alert alert-primary" role="alert" *ngIf="paymentImage.length == 0">
+        This payment doesn't have image.
+      </div>
+      <img *ngFor="let x of paymentImage;" [src]="x">
+    </nb-tab>
+  </nb-tabset>
+</nb-card>

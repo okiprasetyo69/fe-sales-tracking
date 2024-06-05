@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-md-6">
+    <button type="button" class="btn btn-primary" (click)="reload()">Reload</button>
+  </div>
+</div>
+<br/>
+<ngx-form-loading [is_loading]="isLoadingGeneral"></ngx-form-loading>
+
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-card-header>Approval Dashboard</nb-card-header>
+  <nb-card-body>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>No.</th>
+        <th>Module Name</th>
+        <th>Pending Approval</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of prefix_list; let i = index">
+        <td>{{i + 1}}</td>
+        <td>{{data.label}}</td>
+        <td>{{getModuleCount(data.prefix)}}</td>
+        <td>
+          <a class="icon-container" href="javascript:void(0)">
+            <i class="nb-icons nb-search" (click)="dataView(data.prefix)"></i>
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+</nb-card>

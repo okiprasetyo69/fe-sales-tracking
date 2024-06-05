@@ -1,0 +1,80 @@
+<ng-container *ngIf="title == 'Customers'; else elseTemplate">
+<!-- section customer confirm -->
+  <div class="modal-header">
+        Duplicates {{ title }}
+      </div>
+      <div class="modal-body">
+        <h1 class="">Confirm New Data </h1>
+        <div *ngIf="data != null">
+          <!-- header -->
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>ID</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of duplicate; let i = index">
+                  <td>{{ (i + 1 )}}</td>
+                  <td>{{ row.code }}</td>
+                  <td>{{ row.name }}</td>
+              </tr>
+              <ng-container *ngIf="limit">
+                <tr>
+                  <td colspan="3">more than 3 ID's found, please check your upload file</td> 
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <span class="lead">This will replacing the existing data</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-md btn-success" (click)="updateCustomer()">Update</button>
+        <button class="btn btn-md btn-danger" (click)="closeModal()">Cancel</button>
+      </div>
+</ng-container>
+<ng-template #elseTemplate>
+<!-- section packing slip confirm -->
+    <div class="modal-header">
+      Duplicates {{ title }}
+    </div>
+    <div class="modal-body">
+      <h1 class="">Confirm New Data </h1>
+      <div *ngIf="data != null">
+        <!-- header -->
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>ID</th>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of duplicate; let i = index">
+                <td>{{ (i + 1 )}}</td>
+                <td>{{ row.code }}</td>
+                <td> 
+                  <div *ngFor="let product of row.product">
+                    <span>{{ product.product_name}}</span><br>
+                  </div>
+                </td>  
+            </tr>
+            <ng-container *ngIf="limit">
+              <tr>
+                <td colspan="3">more than 3 ID's found, please check your upload file</td> 
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <span class="lead">This will replacing the existing data</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-md btn-success" (click)="updatePackingSlip()">Update</button>
+      <button class="btn btn-md btn-danger" (click)="closeModal()">Cancel</button>
+    </div>
+</ng-template>

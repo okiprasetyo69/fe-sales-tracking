@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <span *ngIf="!error">{{ modalHeader }}</span>
+  <span *ngIf="error">Error</span>
+</div>
+<div class="modal-body">
+  <div *ngIf="!isSubmitting&&!error">
+    Warning, you can't rollback after delete this data.
+  </div>
+  <div *ngIf="error">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="isSubmitting">
+    <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;Deleting Data
+  </div>
+</div>
+<div class="modal-footer" *ngIf="!isSubmitting&&!error">
+  <button class="btn btn-md btn-danger" (click)="closeModal()">No</button>
+  <button class="btn btn-md btn-primary" (click)="confirm()">Yes</button>
+</div>
+
+<div class="modal-footer" *ngIf="error">
+  <button class="btn btn-md btn-danger" (click)="closeModal()">Close</button>
+</div>

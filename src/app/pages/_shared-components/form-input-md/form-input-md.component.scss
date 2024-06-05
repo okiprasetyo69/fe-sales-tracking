@@ -1,0 +1,19 @@
+@import '../../../@theme/styles/themes';
+// framework component themes (styles tied to theme variables)
+@import '~@nebular/theme/styles/globals';
+@import '~@nebular/auth/styles/all';
+
+@include nb-install() {
+  div {
+    color: nb-theme(form-control-text-primary-color);
+  }
+}
+
+i:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.input-group-append button {
+  margin: 0 !important;
+}

@@ -1,0 +1,40 @@
+@import '../../../../@theme/styles/themes';
+@import '~bootstrap/scss/mixins/breakpoints';
+@import '~@nebular/theme/styles/global/bootstrap/breakpoints';
+
+@include nb-install-component() {
+  .box {
+    border: none;
+  }
+
+  .box th {
+    border: none;
+    text-align: center;
+  }
+
+  .box td {
+    text-align: center;
+  }
+
+  .dashboard {
+    border: none;
+  }
+
+  .dashboard td {
+    border: none;
+  }
+
+  .dashboard th {
+    border: none;
+    border-right: 1px solid;
+  }
+
+  .table-wrap {
+    padding-top: 40px;
+    padding-left: 100px;
+  }
+
+  tbody th, tbody td {
+    padding: 0.5rem;
+  }
+}

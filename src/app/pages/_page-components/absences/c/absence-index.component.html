@@ -1,0 +1,64 @@
+<nb-card>
+  <nb-card-header>
+    <h1>Daily Absence </h1> 
+  </nb-card-header>
+
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <div class="row">
+      <div class="col-md-6">
+        
+      </div>
+      <div class="col-md-6">
+   
+        <div class="float-right">
+            <div *ngIf="!seeDetail">
+               
+              <button class="btn btn-sm btn-primary" (click)="reportCheckIn()">
+                <i class="fas fa-thumbtack"></i>
+              </button>
+              <button class="btn btn-sm btn-info" (click)="reportRangeAbsence()">
+                <i class="fa fa-hourglass"></i>
+              </button>
+             
+              <button class="btn btn-sm btn-danger" (click)="dataFilter()">
+                <i class="fa fa-filter"></i>
+              </button>
+            </div>
+        </div>
+       
+      </div>
+    </div>
+
+    <br>
+    <br>
+  
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>User ID</th>
+          <th>User Name</th>
+          <th>Name</th>
+          <th>Total Start</th>
+          <th>Total Stop</th>
+          <th>Total Online</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of datasets; let i = index">
+          <td>{{ (i + 1) + startNumber }}</td>  
+          <td>{{ data.user_id}}</td>
+          <td>{{ data.username}}</td>
+          <td>{{ data.name}}</td>
+          <td>{{ data.total_start}}</td>
+          <td>{{ data.total_stop}}</td>
+          <td>{{ data.total_online}}</td>
+        </tr>
+      </tbody>
+    </table> 
+    <div *ngIf="seeDetail">
+      
+    </div>
+  </nb-card-body>
+</nb-card>

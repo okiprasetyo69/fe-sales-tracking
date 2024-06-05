@@ -1,0 +1,95 @@
+<div *ngIf="!isLoadingGeneral" class="row">
+  <div class="col-md-6">
+    <button type="button" class="btn btn-primary" (click)="back()">Back</button>
+  </div>
+</div>
+<div *ngIf="!isLoadingGeneral">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingGeneral"></ngx-form-loading>
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-card-header>Request Order</nb-card-header>
+  <nb-card-body>
+
+    <ngx-header-detail label="Order Type" content="{{datasets['is_special_order'] ? 'Special' : 'Reguler'}}"></ngx-header-detail>
+
+    <div class="row">
+      <!--left side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Number" content="{{datasets['code']}}"></ngx-header-detail>
+
+      </div>
+
+      <!--right side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Date" content="{{datasets['date']}}"></ngx-header-detail>
+      </div>
+    </div>
+
+    <br>
+    <ngx-header-detail label="Sales Rep." content="{{userData['employee_name']}}"></ngx-header-detail>
+    <div class="row">
+      <!--left side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Branch" content="{{userData['branch_name']}}"></ngx-header-detail>
+      </div>
+      <!--right side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Division" content="{{userData['division_name']}}"></ngx-header-detail>
+      </div>
+    </div>
+
+    <br>
+    <ngx-header-detail label="Customer" content="{{customerData['name']}} - {{datasets['customer_code']}}"></ngx-header-detail>
+    <div class="row">
+      <!--left side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Address" content="{{customerData['address']}}"></ngx-header-detail>
+        <ngx-header-detail label="Lat" content="{{customerData['lat']}}"></ngx-header-detail>
+        <ngx-header-detail label="Lng" content="{{customerData['lng']}}"></ngx-header-detail>
+      </div>
+      <!--right side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Delivery address" content="{{datasets['delivery_address']}}"></ngx-header-detail>
+        <ngx-header-detail label="Location details" content="{{datasets['notes']}}"></ngx-header-detail>
+        <ngx-header-detail *ngIf="datasets['lat'] !== 0.0 && datasets['lng'] !== 0.0" label="Lat" content="{{datasets['lat']}}"></ngx-header-detail>
+        <ngx-header-detail *ngIf="datasets['lat'] !== 0.0 && datasets['lng'] !== 0.0" label="Lng" content="{{datasets['lng']}}"></ngx-header-detail>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-tabset>
+    <nb-tab tabTitle="Product">
+      <div class="alert alert-primary" role="alert" *ngIf="listProduct.length == 0">
+        This request order doesn't have any product.
+      </div>
+      <table class="table table-striped" *ngIf="listProduct.length != 0">
+        <thead>
+        <tr>
+          <th>No.</th>
+          <th>Item Code</th>
+          <th>Item Name</th>
+          <th>Qty</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of listProduct; let i = index">
+          <td>{{i+1}}</td>
+          <td>{{data.item_code}}</td>
+          <td>{{data.item_name}}</td>
+          <td>{{data.qty}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </nb-tab>
+
+    <nb-tab tabTitle="Uploaded Images">
+      <div class="alert alert-primary" role="alert" *ngIf="imageData == null">
+        This request order doesn't have image.
+      </div>
+      <img *ngIf="imageData != null " [src]="imageData">
+    </nb-tab>
+  </nb-tabset>
+</nb-card>

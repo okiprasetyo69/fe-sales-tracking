@@ -1,0 +1,187 @@
+<div class="row" *ngIf="isView">
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button *ngIf="!hideSaveButton" type="button" class="btn btn-primary" (click)="dataEdit()">Edit</button>
+  </div>
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary float-right" (click)="back()">Back</button>
+  </div>
+  <div class="col-md-6" *ngIf="isApprovalView">
+    <h1>APPROVAL PREVIEW</h1>
+  </div>
+</div>
+<div *ngIf="isView">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingGeneral"></ngx-form-loading>
+<!--<form [formGroup]="dataForm">-->
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-card-header>Delivery Route > {{ method | ngxCapitalize }}</nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <div class="row">
+      <!--left side-->
+      <div class="col-md-6" [formGroup]="dataForm">
+        <label for="select_user_id">User</label>
+        <ng-select
+          [ngClass]="{'error': serverErrors['user_id']}"
+          [items]='dataUser'
+          bindLabel="username"
+          bindValue="id"
+          id="select_user_id"
+          (open)="openDropdownUser()"
+          (change)="changePackingSlip()"
+          placeholder="Select User"
+          name="user_id"
+          formControlName="user_id"
+          [loading]="userDropdownLoading"
+          appendTo="body">
+          <ng-template ng-option-tmp let-item="item">
+            {{item.username}} - {{item.employee.name}}
+          </ng-template>
+        </ng-select>
+        <small class="form-text" *ngIf="serverErrors['user_id']">{{serverErrors['user_id']}}</small>
+      </div>
+
+      <!--right side-->
+      <div class="col-md-6">
+        <ngx-form-input-md
+          [group]="dataForm"
+          field="date"
+          [error]="serverErrors"
+          label="Date"
+          type="date"
+          [isView]="isView"
+        ></ngx-form-input-md>
+      </div>
+    </div>
+    <div class="row" [formGroup]="dataForm">
+      <div class="col-md-6">
+        <label for="select_vehicle">Vehicle</label>
+        <ng-select
+          [items]='dataAssets'
+          bindLabel="code"
+          bindValue="id"
+          id="select_vehicle"
+          (open)="openDropdownVehicle()"
+          placeholder="Select vehicle"
+          name="select_vehicle"
+          formControlName="asset_id"
+          [loading]="isLoadingAssets"
+          appendTo="body">
+        </ng-select>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-tabset>
+    <nb-tab tabTitle="Destination" [active]="true">
+      <ngx-form-destination
+        [formGroup]="dataForm"
+        fieldRoute="route"
+        fieldStartBranch="start_route_branch_id"
+        fieldEndBranch="end_route_branch_id"
+        fieldDestination="destination"
+        fieldDestinationOrder="destination_order"
+        fieldUseRoute="is_use_route"
+        [isView]="isView"
+        [withOrder]="true"
+        [serverErrors]="serverErrors"
+        (out_route)="setRoute($event)"
+        (out_destination_order)="setDestinationOrder($event)"
+        (out_destination)="setDestination($event)"
+        (generateSuccessTriggered)="generateRouteSuccess($event)"
+        [planModel]="deliveryPlan"
+      ></ngx-form-destination>
+    </nb-tab>
+
+    <nb-tab tabTitle="Packing Slip">
+      <button class="btn btn-outline-primary"
+              (click)="getAutoPackingSlip()"
+              *ngIf="!isView && dataForm.controls['user_id'].value != null">
+        Auto Add Packing Slip
+      </button>
+      <br/><br/>
+      <div class="form-group" *ngIf="!isView && dataForm.controls['user_id'].value != null">
+        <label for="select_employee_id">Packing Slip</label>
+        <!-- <a href="javascript:void(0)" (click)="changePackingSlip()" *ngIf="!isView">[reload packing slip data]</a> -->
+        <ng-select
+          [items]='dataPackingSlip'
+          bindLabel="code"
+          bindValue="code"
+          id="select_employee_id"
+          [(ngModel)]="packing_slip_code"
+          placeholder="Select Packing Slip"
+          name="packing_slip"
+          [loading]="packingSlipLoading"
+          [searchFn]="ngSelectSearchPackingSlip"
+          appendTo="body">
+          <ng-template ng-option-tmp let-item="item">
+            {{item.code}} - {{item.customer.name}} [ {{ item.customer_code }} ]
+          </ng-template>
+        </ng-select>
+      </div>
+      <button class="btn btn-primary" *ngIf="!isView&&!!packing_slip_code" (click)="addPackingSlip()">Add Packing Slip
+      </button>
+      <br *ngIf="!isView&&!!packing_slip_code"/>
+      <div class="alert alert-primary" role="alert" *ngIf="dataForm.controls['user_id'].value == null">
+        Please select user for add packing slip.
+      </div>
+      <br *ngIf="!isView || dataForm.controls['user_id'].value == null"/>
+      <div class="alert alert-primary" role="alert" *ngIf="dataForm.controls['packing_slip_id'].value.length == 0">
+        You don't have any packing slip.
+      </div>
+      <table class="table table-striped" *ngIf="dataForm.controls['packing_slip_id'].value.length != 0">
+        <thead>
+        <tr>
+          <th style="width: 20px;">No</th>
+          <th>Packing Slip No.</th>
+          <th>Customer</th>
+          <th *ngIf="!isView">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of dataForm.controls['packing_slip_id'].value; let i = index">
+          <td>{{i + 1}}</td>
+          <td>{{data.id_packing_slip}}</td>
+          <td>{{data.customer_name }}</td>
+          <td *ngIf="!isView">
+            <a class="icon-container" href="javascript:void(0)" *ngIf="data.is_confirm != 1">
+              <i class="nb-icons nb-trash" (click)="dataPackingDelete(i)" *ngIf="!isView"></i>
+            </a>
+
+            <a class="icon-container" href="javascript:void(0)" *ngIf="data.is_confirm == 1">
+              <i class="nb-icons nb-checkmark"></i>
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </nb-tab>
+    <nb-tab tabTitle="Routes">
+      <ngx-route-map
+        [withInstruction]="(dataForm.controls['is_use_route'].value == 1) ? true : false"
+        [routeLineShow]="(dataForm.controls['is_use_route'].value == 1) ? true : false"
+        [generated_order]="generated_order"
+        [generated_destination]="generated_destination"
+        [generated_route]="generated_route"
+        [globalFormGroup]="dataForm">
+      </ngx-route-map>
+    </nb-tab>
+  </nb-tabset>
+</nb-card>
+<!--</form>-->
+<div *ngIf="!isLoadingGeneral&&!isView">
+  <div *ngIf="!isSubmiting">
+    <!--<button class="btn btn-primary" (click)="save('continue')"  [disabled]="loadingGenerate" *ngIf="method != 'create'">Save & Continue</button>-->
+    <button *ngIf="!hideSaveButton" class="btn btn-primary" (click)="save('close')" [disabled]="loadingGenerate">
+      Save & Close
+    </button>
+    <button class="btn btn-danger" (click)="back()" [disabled]="loadingGenerate">Back</button>
+  </div>
+  <div *ngIf="isSubmiting">
+    <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+  </div>
+</div>
+<ngx-dev-mode [dataJson]="dataForm.value" title="Data Form"></ngx-dev-mode>

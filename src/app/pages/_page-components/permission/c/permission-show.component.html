@@ -1,0 +1,119 @@
+<div class='row'>
+    <div class='col-md-6'>
+        <button type='button' class='btn btn-primary' (click)='back()'>Back</button>
+    </div>
+    <div class="col-md-6">
+        <label *ngIf="is_approved == 1" class="btn float-right"
+               [ngStyle]="{'color':'#ffffff','background-color':'#00d977'}">Status: Approved</label>
+        <label *ngIf="is_rejected == 1" class="btn float-right"
+               [ngStyle]="{'color':'#ffffff','background-color':'#ff386a'}">Status: Rejected</label>
+        <label *ngIf="is_rejected == 0 && is_approved == 0" class="btn float-right"
+               [ngStyle]="{'color':'#ffffff','background-color':'#7659ff'}">Status: Pending</label>
+    </div>
+</div>
+<div>
+    <br>
+</div>
+
+<nb-card>
+    <nb-card-header>Permission</nb-card-header>
+    <toaster-container></toaster-container>
+    <nb-card-body>
+        <ngx-header-detail label='Date & Time' content='{{date}}'></ngx-header-detail>
+    </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf='type == "break_time"'>
+    <nb-card-body>
+        <div class='form-group'>
+            <label for='extend_break_time'>Extend Time</label>
+            <input type='text' class='form-control' placeholder='Extend Time' id='extend_break_time'
+                   value='{{description.time}}' readonly/>
+        </div>
+        <div class='form-group'>
+            <label for='reason_break_time'>Reason</label>
+            <textarea id='reason_break_time' class='form-control' readonly>{{dataPermission.notes}}</textarea>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf='type == "visit_time"'>
+    <nb-card-body>
+        <br/>
+        <div class='form-group'>
+            <label for='extend_visit_time'>Extend Time</label>
+            <input type='text' class='form-control' placeholder='Extend Time' id='extend_visit_time'
+                   value='{{description.time}}' readonly/>
+        </div>
+        <br/>
+        <div class='form-group'>
+            <label for='reason_visit_time'>Reason</label>
+            <textarea id='reason_visit_time' class='form-control' readonly>{{dataPermission['notes']}}</textarea>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf='type == "routes"'>
+    <nb-card-body>
+        <ngx-route-map [withInstruction]="false"></ngx-route-map>
+        <br/>
+        <div class='form-group'>
+            <label for='reason_permission'>Reason</label>
+            <textarea id='reason_permission' class='form-control' readonly>{{dataPermission.notes}}</textarea>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf='type == "report"'>
+    <nb-card-body>
+        <br/>
+        <div>
+            <p><b>Customer</b>: {{dataPermission['customer_code'] ? dataPermission['customer_code'] : '-'}}</p>
+        </div>
+        <br/>
+        <div class='form-group'>
+            <label for='reasone_report'>Reason</label>
+            <textarea id='reasone_report' class='form-control' readonly>{{ dataPermission.notes }}</textarea>
+        </div>
+        <div *ngIf="dataPermission.description.type == 'location'">
+            <ngx-route-map [withInstruction]="false" [mapShow]="true" [pinPoinRoute]="false"
+                           [latitudePublic]="dataPermission['description']['customer_latitude']"
+                           [longitudePublic]="dataPermission['description']['customer_longitude']"
+                           [extraPinPoin]="extraPinPoin" [extraLine]="extraPinPoin"
+                           [hideAnyMessage]="true"></ngx-route-map>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf='type == "print"'>
+    <nb-card-body>
+        <div class='form-group'>
+            <label><b>Customer Code</b> : {{ description.customer_code }}</label>
+        </div>
+        <div class='form-group'>
+            <label for='subject_print'>Subject</label>
+            <textarea id='subject_print' class='form-control' readonly>{{dataPermission.subject}}</textarea>
+        </div>
+        <div class='form-group'>
+            <label for='reason_print'>Reason</label>
+            <textarea id='reason_print' class='form-control' readonly>{{dataPermission.notes}}</textarea>
+        </div>
+    </nb-card-body>
+</nb-card>
+<nb-card *ngIf="(is_approved == 0 && is_rejected == 0) ? true : false">
+    <nb-card-body>
+        <div *ngIf="!requesting">
+            <div class='row'>
+                <div class='col-md-6'>
+                    <button class='btn btn-hero-success btn-block' (click)="confirm()">Approve</button>
+                </div>
+                <div class='col-md-6'>
+                    <button class='btn btn-hero-danger btn-block' (click)="cancel()">Reject</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="requesting">
+            {{textLabel}}
+        </div>
+    </nb-card-body>
+</nb-card>

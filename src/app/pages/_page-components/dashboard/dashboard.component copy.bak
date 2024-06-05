@@ -1,0 +1,231 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-md-3">
+        <h3>Dashboard</h3>
+      </div>
+      <div class="col-md-9" *ngIf="true">
+        <div class="float-right">
+          <div class="form-inline">
+            <div class="form-group">
+              <div class="form-group" [formGroup]="dataFormFilter">
+                <div class="input-group">
+                  <!--suppress XmlDuplicatedId -->
+                  <input id="select_date_start" class="form-control" style="float:none" placeholder="Select Date Start"
+                         name="select_date_start" ngx-mydatepicker
+                         value="{{ (serverErrors['date_start'] != null && serverErrors['date_start'] != '') ? serverErrors['date_start'] : (dataFormFilter.controls['date_start'].value | date:'mediumDate') }}"
+                         [options]="dateConfigurationStart"
+                         [ngClass]="{'form-control form-control-danger': serverErrors['date_start'], 'form-control': true}"
+                         #dp_start="ngx-mydatepicker" (dateChanged)="onDateStartChanged($event)" readonly/>
+                  <span class="input-group-append">
+                    <button type="button" class="btn btn-info" (click)="dp_start.toggleCalendar()">
+                      <i class="ion ion-calendar"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            &nbsp;-&nbsp;
+            <div class="form-group">
+              <div class="form-group" [formGroup]="dataFormFilter">
+                <div class="input-group">
+                  <!--suppress XmlDuplicatedId -->
+                  <input id="select_date_end" class="form-control" style="float:none" placeholder="Select Date End"
+                         name="select_date_end" ngx-mydatepicker
+                         value="{{ (serverErrors['date_end'] != null && serverErrors['date_end'] != '') ? serverErrors['date_end'] : (dataFormFilter.controls['date_end'].value | date:'mediumDate') }}"
+                         [options]="dateConfigurationEnd"
+                         [ngClass]="{'form-control form-control-danger': serverErrors['date_end'], 'form-control': true}"
+                         #dp_end="ngx-mydatepicker" (dateChanged)="onDateEndChanged($event)" readonly/>
+                  <span class="input-group-append">
+                    <button type="button" class="btn btn-info" (click)="dp_end.toggleCalendar()">
+                      <i class="ion ion-calendar"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="false">
+              <button class="btn btn-primary"><i class="fa fa-filter"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-3" style="text-align: left">
+            <div style="padding-top: 110px;">
+              <h5>Performance <br> {{dateStringTitle}}</h5>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <table class="table box">
+              <tr>
+                <th colspan="2" style="border-bottom: none;">
+                  <h4>Sales Rep.</h4>
+                </th>
+              </tr>
+              <tr>
+                <td style="padding-top:63px;border-top: none;">
+                  <h3>{{ totalPlan }}</h3>
+                  <b>Plan</b>
+                </td>
+                <td style="padding-top:63px;border-top: none;">
+                  <h3>{{ totalVisit }}</h3>
+                  <b>Visited</b>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-md-3">
+            <table class="table box">
+              <tr>
+                <th colspan="2">
+                  <h4>Collector</h4>
+                </th>
+              </tr>
+              <tr>
+                <td style="border-top: none;">
+                  <div style="padding-top:50px;">
+                    <h3>{{ totalPlanCollector }}</h3>
+                    <b>Plan</b>
+                  </div>
+                </td>
+                <td style="border-top: none;">
+                  <div style="padding-top:50px;">
+                    <h3>{{ totalVisitCollector }}</h3>
+                    <b>Visited</b>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="col-md-3">
+            <table class="table box">
+              <tr>
+                <th colspan="2">
+                  <h4>Logistic</h4>
+                </th>
+              </tr>
+              <tr>
+                <td style="border-top: none;">
+                  <div style="padding-top:50px;">
+                    <h3>{{ totalPlanLogistic }}</h3>
+                    <b>Plan</b>
+                  </div>
+                </td>
+                <td style="border-top: none;">
+                  <div style="padding-top:50px;">
+                    <h3>{{ totalDelivery }}</h3>
+                    <b>Delivery</b>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- temporary hide -->
+        <!-- <div class="row">
+          <div class="col-md-12">
+            <div style="padding-top: 40px;">
+              <table class="table dashboard">
+                <tr>
+                  <th>Request Order</th>
+                  <td>{{ totalRequestOrder }}</td>
+                </tr> -->
+                <!-- Hide Sales Order-->
+                
+                <!-- <tr> -->
+                  <!-- <th>Sales Order</th> -->
+                  <!-- <td>{{ totalSalesOrder }}</td> -->
+                <!-- </tr> -->
+                <!-- <tr> -->
+
+                  <!-- <th>Invoice</th> -->
+                  <!-- <td>{{ totalInvoiceAmount | currency: 'IDR ' }}</td> -->
+                <!-- </tr> -->
+                <!-- <tr> -->
+                  <!-- <th>Payment received by Sales Rep.</th> -->
+                  <!-- <td>{{ totalInvoiceAmountPayment | currency: 'IDR '}}</td> -->
+                <!-- </tr> -->
+                <!-- <tr> -->
+                  <!-- <th>Payment confirmed</th> -->
+                  <!-- <td>{{ totalPaymentConfirmed | currency: 'IDR '}}</td> -->
+                <!-- </tr> -->
+              <!-- </table> -->
+            <!-- </div> -->
+          <!-- </div> -->
+        <!-- </div> -->
+        
+      </div>
+    </div>
+    <!-- Performance End -->
+    <hr/>
+    <div class="row">
+      <div class="col-md-6">
+        <h3 class="header">Plan Vs Actual Sales</h3>
+        <b>Time Period : {{ dateStringTitle }}</b>
+        <hr/>
+        <div>
+          <ngx-horizontal-bar #horizontalPlan></ngx-horizontal-bar>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <h3 class="header">Plan Vs Actual Collector</h3>
+        <b>Time Period : {{ dateStringTitle }}</b>
+        <hr/>
+        <div>
+          <ngx-horizontal-bar #horizontalBarCollector></ngx-horizontal-bar>
+        </div>
+      </div>
+
+    </div>
+    <!-- End Row 3 -->
+    <hr/>
+
+    <div class="row">
+      <div class="col-md-6">
+        <h3 class="header">Plan Vs Actual Logistic</h3>
+        <b>Time Period : {{ dateStringTitle }}</b>
+        <hr/>
+        <div>
+          <ngx-horizontal-bar #horizontalActual></ngx-horizontal-bar>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <h3 class="header">Packing Slip</h3>
+        <b>Time Period : {{ dateStringTitle }}</b>
+        <hr/>
+        <ngx-horizontal-bar #packingSlipBarLogistic></ngx-horizontal-bar>
+      </div>
+    </div>
+
+    <!-- chart order sales -->
+    <!-- <div class="row">
+      <div class="col-md-12">
+        <h3 class="header">Order Sales</h3>
+        <b>Time Period : {{ dateStringTitle }}</b>
+        <hr/>
+        <ngx-horizontal-bar #orderSales></ngx-horizontal-bar>
+      </div>
+    </div> -->
+    <!-- chard order sales end -->
+    <!-- <div class="row"> -->
+      <!-- <div class="col-md-12"> -->
+        <!-- <h3 class="header">Packing Slip</h3> -->
+        <!-- <b>Time Period : {{ dateStringTitle }}</b> -->
+        <!-- <hr/> -->
+        <!-- <ngx-horizontal-bar #packingSlipBarLogistic></ngx-horizontal-bar> -->
+      <!-- </div> -->
+    <!-- </div> -->
+  </nb-card-body>
+</nb-card>

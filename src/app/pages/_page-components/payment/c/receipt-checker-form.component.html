@@ -1,0 +1,80 @@
+<nb-card>
+  <nb-card-header>Payment > Receipt Checker</nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <fieldset [disabled]="isSubmitting">
+      <form [formGroup]="dataForm">
+        <div class="row">
+          <!--left side-->
+          <!--<div class="col-md-6">-->
+            <!--<ngx-form-input-md-->
+              <!--[group]="dataForm"-->
+              <!--field="date"-->
+              <!--[error]="serverErrors"-->
+              <!--label="Date"-->
+              <!--type="date"-->
+            <!--&gt;</ngx-form-input-md>-->
+          <!--</div>-->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="date">Date</label>
+              <div class="input-group">
+                <input [ngClass]="{'form-control form-control-danger': serverErrors['date'], 'form-control': true}"
+                  id="date"
+                  class="form-control"
+                  style="float:none"
+                  placeholder="Select a date"
+                  name="date"
+                  ngx-mydatepicker
+                  [options]="myOptions"
+                  #dp="ngx-mydatepicker"
+                  (dateChanged)="onDateChanged($event)"
+                  readonly/>
+                <span class="input-group-append">
+                  <button type="button" class="btn btn-danger" (click)="dp.clearDate()">
+                    <i class="ion ion-close"></i>
+                  </button>
+                  <button type="button" class="btn btn-info" (click)="dp.toggleCalendar()">
+                    <i class="ion ion-calendar"></i>
+                  </button>
+                </span>
+              </div>
+              <small class="form-text" *ngIf="serverErrors['date']">{{serverErrors['date']}}</small>
+            </div>
+          </div>
+          <!--end of left side-->
+          <!--right side-->
+          <div class="col-md-6">
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Code"
+              field="code"
+              [error]="serverErrors"></ngx-form-input-md>
+          </div>
+          <!--end of right side-->
+        </div>
+
+      </form>
+
+    </fieldset>
+  </nb-card-body>
+</nb-card>
+
+<div>
+  <div *ngIf="!isSubmitting">
+    <button [disabled]="isSubmitting"
+            type="submit"
+            class="btn btn-primary" (click)="submitChecker()">Submit <i
+      class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+    </button>
+
+    <button [disabled]="isSubmitting" type="button"
+            class="btn btn-danger" (click)="back()">Back <i class="fa fa-spinner fa-spin fa-fw"
+                                                            *ngIf="isSubmitting"></i>
+    </button>
+  </div>
+  <div *ngIf="isSubmitting">
+    <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+  </div></div>
+<ngx-dev-mode [dataJson]="dataForm.value"></ngx-dev-mode>

@@ -1,0 +1,88 @@
+<div *ngIf="isShow">
+  <nb-card *ngIf="PlanSummaryType == null||Plan == null">
+    <nb-card-body>
+      <div class="alert alert-warning" role="alert" *ngIf="PlanSummaryType == null">
+        Please Select Plan Summary Type
+      </div>
+      <div class="alert alert-warning" role="alert" *ngIf="Plan == null">
+        Plan Model is null
+      </div>
+    </nb-card-body>
+  </nb-card>
+
+  <nb-card *ngIf="PlanSummaryType != null&&Plan != null">
+    <nb-card-header>{{ PlanSummaryType.planName }} Note</nb-card-header>
+    <nb-card-body>
+      <div *ngIf="loading">
+        Please Wait, Getting information...
+      </div>
+      <div *ngIf="!loading">
+        <div class="alert alert-warning" role="alert" *ngIf="planPhotos.length == 0">
+          This {{ PlanSummaryType.planName }} does not have any visit note
+        </div>
+        <div *ngIf="planPhotos.length != 0">
+          <table>
+            <tr>
+              <th>Customer Code</th>
+              <th>Date</th>
+              <th>Note</th>
+              <td align="right"><b>Image</b></td>
+            </tr>
+            <tr *ngFor="let x of planPhotos;">
+              <td valign="top">
+                <p style="margin-top: 20px">{{ x.customer_code }}</p>
+              </td>
+              <td valign="top">
+                <p style="margin-top: 20px">{{ x.create_date }}</p>
+              </td>
+              <td valign="top">
+                <p style="margin-top: 20px">{{ x.note }}</p>
+              </td>
+              <td align="right">
+                <img [src]="x.image" width="150" style="margin-top: 20px" (click)="openNewTab(x.base64)">
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </nb-card-body>
+  </nb-card>
+
+  <nb-card *ngIf="PlanSummaryType != null&&Plan != null&&PlanSummaryType.planName != 'Delivery Plan'">
+    <nb-card-header>Competitor</nb-card-header>
+    <nb-card-body>
+      <div *ngIf="loading">
+        Please Wait, Getting information...
+      </div>
+      <div *ngIf="!loading">
+        <div class="alert alert-warning" role="alert" *ngIf="competitorPhotos.length == 0">
+          This {{ PlanSummaryType.planName }} does not have any competitor
+        </div>
+        <div *ngIf="competitorPhotos.length != 0">
+          <table>
+            <tr>
+              <th>Customer Code</th>
+              <th>Date</th>
+              <th>Note</th>
+              <td align="right"><b>Image</b></td>
+            </tr>
+            <tr *ngFor="let x of competitorPhotos;">
+              <td valign="top">
+                <p style="margin-top: 20px">{{ x.customer_code }}</p>
+              </td>
+              <td valign="top">
+                <p style="margin-top: 20px">{{ x.create_date }}</p>
+              </td>
+              <td valign="top">
+                <p style="margin-top: 20px">{{ x.note }}</p>
+              </td>
+              <td align="right">
+                <img [src]="x.image" width="150" style="margin-top: 20px" (click)="openNewTab(x.base64)">
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </nb-card-body>
+  </nb-card>
+</div>

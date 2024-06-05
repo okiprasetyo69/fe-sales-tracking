@@ -1,0 +1,266 @@
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&isView" class="row">
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="submit" class="btn btn-primary" (click)="dataEdit()">Edit</button>
+  </div>
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary float-right" (click)="back()">Back</button>
+  </div>
+  <div class="col-md-6" *ngIf="isApprovalView">
+    <h1>APPROVAL PREVIEW</h1>
+  </div>
+</div>
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&isView">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingDropdown||isLoadingGeneral"></ngx-form-loading>
+<nb-card *ngIf="!(isLoadingDropdown||isLoadingGeneral)">
+  <nb-card-header>Branch > {{method | ngxCapitalize}}</nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body *ngIf="!isLoadingDropdown&&!isLoadingGeneral">
+    <form [formGroup]="dataForm">
+      <fieldset [disabled]="isSubmitting||isView">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="branch_code">Branch Code</label>
+              <input
+                type="text"
+                [ngClass]="{'form-control form-control-danger': serverErrors['branch_code'], 'form-control': true}"
+                formControlName="branch_code"
+                id="branch_code"
+                placeholder="Branch Code ( _ _ )"
+                [textMask]="{mask: branch_code_mask, guide: false}">
+              <small class="form-text" *ngIf="serverErrors['branch_code']">{{serverErrors['branch_code']}}</small>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!--left side-->
+          <div class="col-md-6">
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Branch Name"
+              field="name"
+              [error]="serverErrors"></ngx-form-input-md>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Email"
+              field="email"
+              [error]="serverErrors"
+              *ngIf="false"></ngx-form-input-md>
+
+            <!--for scrolling after hide map-->
+            <div id="address_input"></div>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Phone"
+              field="phone"
+              [error]="serverErrors"></ngx-form-input-md>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Address"
+              field="address"
+              [error]="serverErrors"></ngx-form-input-md>
+
+            <div class="row">
+              <div class="col-md-4">
+                <ngx-form-input-md
+                  [group]="dataForm"
+                  type="text"
+                  label="Latitude"
+                  field="lat"
+                  [error]="serverErrors"></ngx-form-input-md>
+              </div>
+              <div class="col-md-4">
+                <ngx-form-input-md
+                  [group]="dataForm"
+                  type="text"
+                  label="Longitude"
+                  field="lng"
+                  [error]="serverErrors"></ngx-form-input-md>
+              </div>
+              <div class="col-md-4">
+                <label>Pick from map</label>
+                <br/>
+                <button type="button" class="btn btn-hero-primary" (click)="pickMap()" *ngIf="!isView">show map</button>
+                <a href="javascript:void(0)" (click)="pickMap()" *ngIf="isView">show map</a>
+              </div>
+            </div>
+
+            <!-- Hide -->
+            <div class="form-group" *ngIf="false">
+              <label for="area_id"> Area</label>
+              <ng-select
+                [loading]="loadingDropdownArea"
+                [items]='areaData'
+                [ngClass]="{'error': serverErrors['area_id']}"
+                bindLabel="name"
+                bindValue="id"
+                id="area_id"
+                formControlName="area_id"
+                placeholder="Select Area"
+                name="area_id"
+                appendTo="body"
+                (open)="openDropdownArea()">
+              </ng-select>
+              <small class="form-text" *ngIf="serverErrors['area_id']">{{serverErrors['area_id']}}</small>
+            </div>
+
+          </div>
+          <!--end of left side-->
+
+          <!--right side-->
+          <div class="col-md-6">
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="select"
+              label="Working days start"
+              field="working_day_start"
+              placeholderMessage="Working Days Start"
+              [error]="serverErrors"
+              [dataSelect]="dayData"
+              dataSelectKey="key"
+              dataSelectLabel="val"></ngx-form-input-md>
+
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="select"
+              label="Working days end"
+              field="working_day_end"
+              [dataSelect]="dayData"
+              dataSelectKey="key"
+              dataSelectLabel="val"
+              [error]="serverErrors"></ngx-form-input-md>
+
+            <div class="form-group">
+              <label for="working_hour_start">Working Hours Start</label>
+              <input type="text"
+                     [ngClass]="{'form-control form-control-danger': serverErrors['working_hour_start'], 'form-control': true}"
+                     formControlName="working_hour_start"
+                     id="working_hour_start"
+                     placeholder="To (HH:mm)"
+                     [textMask]="{mask: mask_time, guide: true, placeholderChar: '_'}">
+              <small class="form-text" *ngIf="serverErrors['working_hour_start']">
+                {{serverErrors['working_hour_start']}}
+              </small>
+            </div>
+            <div class="form-group">
+              <label for="working_hour_end">Working Hours End</label>
+              <input type="text"
+                     [ngClass]="{'form-control form-control-danger': serverErrors['working_hour_end'], 'form-control': true}"
+                     formControlName="working_hour_end"
+                     id="working_hour_end"
+                     placeholder="To (HH:mm)"
+                     [textMask]="{mask: mask_time, guide: true, placeholderChar: '_'}">
+              <small class="form-text" *ngIf="serverErrors['working_hour_end']">{{serverErrors['working_hour_end']}}
+              </small>
+            </div>
+
+            <!-- Hide -->
+            <ngx-form-input-md
+              *ngIf="false"
+              [group]="dataForm"
+              type="text"
+              label="NFC ID"
+              field="nfcid"
+              [error]="serverErrors"></ngx-form-input-md>
+
+            <div class="form-group" [formGroup]="dataForm">
+              <label for="division_id">Division</label>
+              <ng-select
+                [loading]="loadingDropdownDivision"
+                [items]='divisionsDropdownList'
+                [ngClass]="{'error': serverErrors['division_id']}"
+                bindLabel="division_name"
+                bindValue="id"
+                id="division_id"
+                formControlName="division_id"
+                placeholder="Select Division"
+                name="division_id"
+                appendTo="body"
+                (open)="openDropdownDivision()"
+                [multiple]="true">
+
+                <ng-template ng-header-tmp>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <button class="btn btn-xs btn-primary button-select-addon btn-block" (click)="selectAll()"
+                              style="margin-left: 5px;margin-right: -5px;">All
+                      </button>
+                    </div>
+                    <div class="col-md-6">
+                      <button class="btn btn-xs btn-primary button-select-addon btn-block" (click)="unselectAll()"
+                              style="margin-right: -5px;margin-left: -5px;">Unselect all
+                      </button>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <small class="form-text" *ngIf="serverErrors['division_id']">{{serverErrors['division_id']}}</small>
+            </div>
+          </div>
+
+          <!--end of right side-->
+
+        </div>
+      </fieldset>
+
+
+    </form>
+  </nb-card-body>
+</nb-card>
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView">
+  <div *ngIf="!isSubmitting">
+    <button
+      *ngIf="!isLoadingDropdown&&
+        !isLoadingGeneral&&
+        !isView&&
+        (method==='edit')"
+      [disabled]="isSubmitting"
+      type="submit"
+      class="btn btn-primary"
+      (click)="saveData(dataForm.value, 'continue')">Save & Continue
+    </button>
+    <button *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView" [disabled]="isSubmitting" type="submit"
+            class="btn btn-primary" (click)="saveData(dataForm.value, 'close')">Save & Close <i
+      class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i></button>
+    <button *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView" [disabled]="isSubmitting" type="button"
+            class="btn btn-danger" (click)="back()">Back <i class="fa fa-spinner fa-spin fa-fw"
+                                                            *ngIf="isSubmitting"></i>
+    </button>
+  </div>
+  <div *ngIf="isSubmitting">
+    <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+  </div>
+  <br/>
+</div>
+<!--map picker-->
+<div id="pickmap_input" *ngIf="!(isLoadingDropdown||isLoadingGeneral)"></div>
+<nb-card *ngIf="isPickMap&&!(isLoadingDropdown||isLoadingGeneral)">
+  <nb-card-body>
+    <fieldset [disabled]="isSubmitting||isView||id===1">
+      <div class="form-group">
+        <input placeholder="Search for location..." autocorrect="off" autocapitalize="off" spellcheck="off" type="text"
+               class="form-control"
+               #search [formControl]="searchControl" value="{{address}}">
+      </div>
+      <agm-map [latitude]="latitude" [longitude]="longitude" [scrollwheel]="false" [zoom]="zoom">
+        <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
+                    (dragEnd)="dragEnd($event)"></agm-marker>
+      </agm-map>
+      <br>
+    </fieldset>
+    <button class="btn btn-outline-primary" (click)="hideMap()" type="button">Hide</button>
+  </nb-card-body>
+</nb-card>
+
+<!--end map picker-->
+
+<ngx-dev-mode [dataJson]="dataForm.value"></ngx-dev-mode>

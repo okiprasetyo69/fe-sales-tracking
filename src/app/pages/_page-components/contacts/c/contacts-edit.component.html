@@ -1,0 +1,73 @@
+<form [formGroup]="dataForm" (ngSubmit)="storeData(dataForm.value)">
+    <nb-card>
+        <nb-card-header>Contact > Create</nb-card-header>
+        <nb-card-body>
+            <toaster-container></toaster-container>
+            <fieldset [disabled]="isSubmitting">
+                <div class="row">
+                    <!--left side-->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" [ngClass]="{'form-control form-control-danger': serverErrors['name'], 'form-control': true}" formControlName="name"
+                                   id="name" placeholder="Name">
+                            <small class="form-text" *ngIf="serverErrors['name']">{{serverErrors['name']}}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" [ngClass]="{'form-control form-control-danger': serverErrors['email'], 'form-control': true}" formControlName="email"
+                                   id="email" placeholder="Email">
+                            <small class="form-text" *ngIf="serverErrors['email']">{{serverErrors['email']}}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="job_function">Job position</label>
+                            <input type="text" [ngClass]="{'form-control form-control-danger': serverErrors['job_function'], 'form-control': true}" formControlName="job_function"
+                                   id="job_function" placeholder="Job position">
+                            <small class="form-text" *ngIf="serverErrors['job_function']">{{serverErrors['job_function']}}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="note">Note</label>
+                            <input type="textarea" [ngClass]="{'form-control form-control-danger': serverErrors['note'], 'form-control': true}" formControlName="note"
+                                   id="note" placeholder="Note">
+                            <small class="form-text" *ngIf="serverErrors['note']">{{serverErrors['note']}}</small>
+                        </div>
+
+                    </div>
+                    <!--end of left side-->
+
+                    <!-- right side -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="text" [ngClass]="{'form-control form-control-danger': serverErrors['phone'], 'form-control': true}" formControlName="phone"
+                                   id="phone" placeholder="Phone">
+                            <small class="form-text" *ngIf="serverErrors['phone']">{{serverErrors['phone']}}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">Mobile</label>
+                            <input type="text" [ngClass]="{'form-control form-control-danger': serverErrors['mobile'], 'form-control': true}" formControlName="mobile"
+                                   id="mobile" placeholder="Mobile">
+                            <small class="form-text" *ngIf="serverErrors['mobile']">{{serverErrors['mobile']}}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer_branch_id">Branch</label>
+                            <select [ngClass]="{'form-control form-control-danger': serverErrors['customer_branch_id'], 'form-control': true}" formControlName="customer_branch_id"
+                                    id="customer_branch_id" placeholder="Branch">
+
+                                <option *ngFor="let data of dataCustomerBranch; let i = index" [value]="data.id">
+                                    {{data.name}}
+                                </option>
+                            </select>
+                            <small class="form-text" *ngIf="serverErrors['customer_branch_id']">{{serverErrors['customer_branch_id']}}</small>
+                        </div>
+
+                    </div>
+                    <!-- end of right side -->
+                </div>
+            </fieldset>
+        </nb-card-body>
+    </nb-card>
+    <button type="submit" class="btn btn-primary">Save</button>
+
+</form>
+{{dataForm.value | json}}

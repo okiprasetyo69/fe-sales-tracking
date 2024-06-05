@@ -1,0 +1,45 @@
+<div class="modal-header">
+  <span>Filter</span>
+</div>
+<div class="modal-body">
+  <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_username">Select User</label>
+    <!--suppress XmlDuplicatedId -->
+    <ng-select
+      [ngClass]="{'error': serverErrors['user_id']}"
+      [items]='userData'
+      bindLabel="username"
+      bindValue="username"
+      id="select_username"
+      placeholder="Select User"
+      formControlName="user_id"
+      appendTo="body"
+      [multiple]="true"
+      [loading]="dropdownUserLoading"
+      (open)="openUserDropdown()"
+      (change)="changeUser($event)"></ng-select>
+    <small class="form-text" *ngIf="serverErrors['user_id']">{{serverErrors['user_id']}}</small>
+  </div>
+  <div class="form-group" [formGroup]="dataFormCloned">
+    <label for="select_area_id">Select Area</label>
+    <!--suppress XmlDuplicatedId -->
+    <ng-select
+      [ngClass]="{'error': serverErrors['area']}"
+      [items]='areaData'
+      bindLabel="name"
+      bindValue="id"
+      id="select_area_id"
+      placeholder="Select Area"
+      formControlName="area"
+      appendTo="body"
+      [multiple]="true"
+      [loading]="dropdownAreaLoading"
+      (open)="openAreaDropdown()"
+      (change)="changeArea($event)"></ng-select>
+    <small class="form-text" *ngIf="serverErrors['area']">{{serverErrors['area']}}</small>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-md btn-success" type="submit" (click)="filterNow()">Filter</button>
+  <button class="btn btn-md btn-danger" (click)="closeModal()">Close</button>
+</div>

@@ -1,0 +1,99 @@
+<div *ngIf="loading">
+  Please Wait, Getting information...
+</div>
+<div *ngIf="!loading">
+  <div *ngIf="listVisitCard.length == 0">
+    No Summary or Competitor Exists
+  </div>
+  <div style="margin-bottom: 10px;" class="visit-card" *ngFor="let x of listVisitCard">
+    <table style="width:100%;">
+      <thead>
+      <tr>
+        <!-- for debug variable use {{Plan | json}} -->
+        <th>
+            <h1>{{x.customer_code | CustomerName: Plan}}</h1>
+        </th>
+        <th>
+          <table>
+            <tr>
+              <td><!-- Check In --></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><!-- Check Out --></td>
+              <td></td>
+            </tr>
+          </table>
+        </th>
+      </tr>
+      <!-- Pembatas Spasi -->
+      <tr>
+        <td colspan="2"><br/></td>
+      </tr>
+      </thead>
+      <tbody>
+          <tr>
+            <!-- <td colspan="2"><h2>Visit Summary</h2></td> -->
+              
+            <ng-container *ngIf="((x.category_visit === null || x.category_visit === '') && (x.collect_method === null || x.collect_method === '')); else elseHeader">
+              <td colspan="2"><h2>Visit Summary</h2></td>
+            </ng-container>
+            <ng-template #elseHeader>
+              <td style="width:50%;"><h2>Visit Summary</h2></td>
+
+              <ng-container *ngIf="(x.collect_method === null || x.collect_method === ''); else elseSubHeader">
+                <td style="width:50%;"><h2>Visit Category</h2></td>
+              </ng-container>
+              <ng-template #elseSubHeader>
+                <td style="width:50%;"><h2>Collect Method</h2></td>
+              </ng-template>
+              
+            </ng-template>
+            
+          </tr>
+          <tr>
+            <!-- test code -->
+            <ng-container *ngIf="((x.category_visit === null || x.category_visit === '') && (x.collect_method === null || x.collect_method === '')); else elseCardBody">
+              <td style="width:50%; padding-right: 15px;" colspan="2">
+                  {{ x.notes }}
+                </td>
+              </ng-container>
+              <ng-template #elseCardBody>
+                <td style="padding-right:15px;">
+                  {{x.notes}}
+                </td>
+                <td>
+
+                  <ng-container *ngIf="(x.collect_method === null || x.collect_method === ''); else elseSubBody">
+                    {{x.category_visit}}
+                  </ng-container>
+                  <ng-template #elseSubBody>
+                    {{x.collect_method}}
+                  </ng-template>
+                  
+                </td>
+            </ng-template>
+            <!-- test code end-->
+          </tr>
+          <!-- Pembatas Spasi -->
+          <tr>
+            <td colspan="2"><br/><br/></td>
+          </tr>
+          <tr>
+            <td><h2>Visit Image</h2></td>
+            <td><h2>Product Competitor Image</h2></td>
+          </tr>
+          <tr>
+            <td>
+              <ngx-visit-card-item [listImage]="listImageVisit" [plan]="x"
+                                   messageEmpty="Visit Image Not Exists"></ngx-visit-card-item>
+            </td>
+            <td>
+              <ngx-visit-card-item [listImage]="listImageCompetitor" [plan]="x"
+                                   messageEmpty="Product Competitor Image Not Exists"></ngx-visit-card-item>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+  </div>
+</div>

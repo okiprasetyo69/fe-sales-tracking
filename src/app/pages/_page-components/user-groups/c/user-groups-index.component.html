@@ -1,0 +1,44 @@
+<nb-card>
+  <nb-card-header>User Groups</nb-card-header>
+  <toaster-container></toaster-container>
+
+  <nb-card-body>
+    <button class="btn btn-primary" type="button" routerLink="/pages/settings/user_groups/create">
+      Create New User Group
+    </button>
+    <br>
+    <br>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Created Date</th>
+          <th>Group Code</th>
+          <th>Group Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of datasets; let i = index">
+          <td>{{(i + 1) + startNumber }}</td>
+          <td>{{data.create_date | date:'mediumDate'}}</td>
+          <td>{{data.code}}</td>
+          <td>{{data.group_name}}</td>
+          <td>
+            <a class="icon-container" href="javascript:void(0)">
+              <i class="nb-icons nb-search" (click)="dataView(data.id)"></i>
+            </a>
+            <a class="icon-container" href="javascript:void(0)">
+              <i class="nb-icons nb-edit" (click)="dataEdit(data.id)"></i>
+            </a>
+            <a class="icon-container" href="javascript:void(0)">
+              <i class="nb-icons nb-trash" (click)="dataDelete(data.id)"></i>
+            </a>
+            <ngx-index-approval-flag [data]="data"></ngx-index-approval-flag>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+
+</nb-card>

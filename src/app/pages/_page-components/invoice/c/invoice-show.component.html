@@ -1,0 +1,108 @@
+<div *ngIf="!isLoadingGeneral" class="row">
+  <div class="col-md-6">
+    <button type="button" class="btn btn-primary" (click)="back()">Back</button>
+  </div>
+</div>
+<div *ngIf="!isLoadingGeneral">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingGeneral"></ngx-form-loading>
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-card-header>Invoice</nb-card-header>
+  <nb-card-body>
+    <ngx-header-detail label="Invoice No." content="{{datasets['code']}}"></ngx-header-detail>
+    <ngx-header-detail label="Invoice Date & Time" content="{{datasets['invoice_date']}}"></ngx-header-detail>
+<!--    <div class="row">-->
+    <!--      &lt;!&ndash;left side&ndash;&gt;-->
+    <!--      <div class="col-md-6">-->
+    <!--        <ngx-header-detail label="Sales order no." content="{{datasets['sales_order_code']}}"></ngx-header-detail>-->
+    <!--        <ngx-header-detail label="Sales order date" content="{{datasets['sales_order_date']}}"></ngx-header-detail>-->
+    <!--      </div>-->
+
+    <!--      &lt;!&ndash;right side&ndash;&gt;-->
+    <!--      <div class="col-md-6">-->
+    <!--        <ngx-header-detail label="Packing slip no." content="{{datasets['packing_slip_code']}}"></ngx-header-detail>-->
+    <!--        <ngx-header-detail label="Packing slip date"-->
+    <!--                           content="{{datasets['packing_slip_date']}}"></ngx-header-detail>-->
+    <!--      </div>-->
+    <!--    </div>-->
+
+    <br>
+    <ngx-header-detail label="Sales Rep." content="{{dataUser['employee_name']}}"></ngx-header-detail>
+    <div class="row">
+      <!--left side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Branch" content="{{datasets['branch_name']}}"></ngx-header-detail>
+      </div>
+      <!--right side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Division" content="{{datasets['division_name']}}"></ngx-header-detail>
+      </div>
+    </div>
+
+    <br>
+    <ngx-header-detail label="Customer" content="{{datasets['customer']?.name}}"></ngx-header-detail>
+    <div class="row">
+      <!--left side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="PIC" content="{{pic}}"></ngx-header-detail>
+      </div>
+      <!--right side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Delivery Address" content="{{dataCustomer['address']}}"></ngx-header-detail>
+        <ngx-header-detail label="Lat" content="{{dataCustomer['lat']}}"></ngx-header-detail>
+        <ngx-header-detail label="Lng" content="{{dataCustomer['lng']}}"></ngx-header-detail>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-tabset>
+    <nb-tab tabTitle="Items">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>No.</th>
+          <th>Brand Name</th>
+          <th>Item Name</th>
+          <th style="text-align: center;">Qty</th>
+          <th>Unit</th>
+          <th style="text-align: center;">Unit Price</th>
+          <th style="text-align: center;">Sub Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of dataItems; let i = index;">
+          <td>{{i + 1}}</td>
+          <td>{{data.brand_name}}</td>
+          <td>{{data.product_name}}</td>
+          <td style="text-align: right">{{data.quantity}}</td>
+          <td>Unit</td>
+          <td style="text-align: right">{{data.unit_price | currency:'IDR '}}</td>
+          <td style="text-align: right">{{(data.quantity * data.unit_price) | currency:'IDR '}}</td>
+        </tr>
+        </tbody>
+        <br/>
+        <tfoot>
+        <tr>
+          <th colspan="6">Total</th>
+          <th style="text-align: right;">{{invoiceAmount | currency:'IDR '}}</th>
+        </tr>
+        <tr>
+          <th colspan="6">Payment Receive</th>
+          <th style="text-align: right;">{{ paymentAmount | currency: 'IDR '}}</th>
+        </tr>
+        <!--<tr>-->
+        <!--<th colspan="6">Balance</th>-->
+        <!--<th style="text-align: right;">{{ totalPrice - paymentAmount | currency: 'IDR '}}</th>-->
+        <!--</tr>-->
+        </tfoot>
+      </table>
+    </nb-tab>
+
+    <!-- <nb-tab tabTitle="Uploaded Images">
+      <img src="/uploads/sketch01.png">
+    </nb-tab> -->
+  </nb-tabset>
+</nb-card>

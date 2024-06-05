@@ -1,0 +1,10 @@
+@import '../../../@theme/styles/themes';
+// framework component themes (styles tied to theme variables)
+@import '~@nebular/theme/styles/globals';
+@import '~@nebular/auth/styles/all';
+
+@include nb-install-component() {
+  pre {
+    color: nb-theme(form-control-text-primary-color);
+  }
+}

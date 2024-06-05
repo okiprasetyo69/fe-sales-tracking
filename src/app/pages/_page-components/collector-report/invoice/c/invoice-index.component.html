@@ -1,0 +1,62 @@
+<nb-card>
+  <nb-card-header>
+    Collector Report Invoice ( {{dateStringTitle}} )
+    <div class="float-right">
+      <button class="btn btn-sm btn-success" (click)="exportExcel()">
+        <i class="fa fa-file-excel"></i>
+      </button>
+      <button class="btn btn-sm btn-success" (click)="exportPdf()">
+        <i class="fa fa-file-pdf"></i>
+      </button>
+      <button class="btn btn-sm btn-success" (click)="print()">
+        <i class="fa fa-print"></i>
+      </button>
+      &nbsp;&nbsp;
+      <button class="btn btn-sm btn-danger" (click)="dataFilter()">
+        <i class="fa fa-filter"></i>
+      </button>
+    </div>
+  </nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+      <tr>
+        <th>No.</th>
+        <th>Date</th>
+        <th>Branch</th>
+        <th>Division</th>
+        <th>Customer</th>
+        <th>Customer code</th>
+        <!-- <th>Sales Order No.</th> -->
+        <th>Invoice No.</th>
+        <!-- <th>Due Date</th> -->
+        <th>Status</th>
+        <th>Sales Rep.</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of datasets; let i = index">
+        <td>{{(i + 1) + startNumber }}</td>
+        <!-- @TODO: Fix harusnya ada medium date -->
+        <!--<td>{{data.invoice_date | date: 'mediumDate'}}</td>-->
+        <td>{{data.invoice_date }}</td>
+        <td>{{data.branch_name }}</td>
+        <td>{{data.division_name }}</td>
+        <td>{{data.customer.name}}</td>
+        <td>{{data.customer_code}}</td>
+        <!-- <td>{{data.sales_order_code}}</td> -->
+        <td>{{data.code}}</td>
+        <!-- @TODO: Fix harusnya ada medium date -->
+        <!--<td>{{data.payment_due_date | date:'mediumDate'}}</td>-->
+        <!-- <td>{{data.payment_due_date}}</td> -->
+        <td>{{data.status}}</td>
+        <td>{{ (data.user.length == 0 || data.user == '') ? "---" : data.user.employee_name }}</td>
+      </tr>
+      </tbody>
+    </table>
+
+  </nb-card-body>
+
+
+</nb-card>

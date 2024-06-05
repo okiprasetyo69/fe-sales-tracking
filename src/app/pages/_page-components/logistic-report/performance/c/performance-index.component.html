@@ -1,0 +1,56 @@
+<nb-card>
+  <nb-card-header>
+    Report Performance ( {{dateStringTitle}} )
+    <div class="float-right">
+      <button class="btn btn-sm btn-success" (click)="export()">
+        <i class="fa fa-file-excel"></i>
+      </button>
+      <button class="btn btn-sm btn-success" (click)="print()">
+        <i class="fa fa-print"></i>
+      </button>
+      &nbsp;&nbsp;
+      <button class="btn btn-sm btn-danger" (click)="dataFilter()">
+        <i class="fa fa-filter"></i>
+      </button>
+    </div>
+  </nb-card-header>
+  <toaster-container></toaster-container>
+
+  <nb-card-body>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+      <tr>
+        <th>No.</th>
+        <th>User</th>
+        <th>Branch</th>
+        <th>Break Time</th>
+        <th>Visited</th>
+        <th>Stop Time</th>
+        <th>Driving</th>
+        <th>Plan</th>
+        <th>Alert</th>
+        <th>Permissions</th>
+        <th>Cancel</th>
+        <th>Packing Slip</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of datasets;let i = index;">
+        <td>{{ (i + 1) + startNumber }}</td>
+        <td>{{data.username}}</td>
+        <td>{{data.branch?.name}}</td>
+        <td>{{data.break_time}}</td>
+        <td>{{data.visited}}</td>
+        <td>{{data.visit_time}}</td>
+        <td>{{data.driving_time}}</td>
+        <td>{{data.plan}}</td>
+        <td>{{data.alert}}</td>
+        <td>{{data.permission}}</td>
+        <td>{{data.cancel}}</td>
+        <td>{{data.packing_slip}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+
+</nb-card>

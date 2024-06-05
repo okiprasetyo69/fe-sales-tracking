@@ -1,0 +1,108 @@
+<div class="row">
+  <!--left side-->
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="{{cycle_day}}_start_route_branch_id">Start</label>
+      <select class="form-control"
+              [(ngModel)]="dataForm[cycle_day]['start_route_branch_id']"
+              name="{{cycle_day}}_start_route_branch_id"
+              id="{{cycle_day}}_start_route_branch_id">
+
+        <option *ngFor="let branch of branchDropdown; let i = index" [ngValue]=branch.id>
+          {{branch.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <!--end of left side-->
+
+  <!-- right side -->
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="{{cycle_day}}_end_route_branch_id">End</label>
+      <select class="form-control"
+              [(ngModel)]="dataForm[cycle_day]['end_route_branch_id']"
+              name="{{cycle_day}}_end_route_branch_id"
+              id="{{cycle_day}}_end_route_branch_id">
+
+        <option *ngFor="let branch of branchDropdown; let i = index" [ngValue]=branch.id>
+          {{branch.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <!-- end of right side -->
+</div>
+
+<!--destinations form-->
+<div class="row" *ngIf="!isView">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="{{cycle_day}}_destination">{{form_destination_mode[cycle_day] | ngxCapitalize}} Destination</label>
+      <select class="form-control"
+              [(ngModel)]="destinationForm[cycle_day]['customer_code']"
+              name="{{cycle_day}}_destination"
+              id="{{cycle_day}}_destination">
+
+        <option *ngFor="let customer of customerDropdown; let i = index" [ngValue]=customer.code>
+          {{customer.name}}
+        </option>
+      </select>
+      <br>
+      <textarea
+         class="form-control"
+         [(ngModel)]="destinationForm[cycle_day]['note']"
+         name="{{cycle_day}}_note"
+         id="{{cycle_day}}_note"
+         placeholder="Note"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary" (click)="saveDestination(destinationForm[cycle_day])">{{form_destination_mode[cycle_day] | ngxCapitalize}}</button>
+
+    <button type="submit" class="btn btn-outline-primary" (click)="clearDestination()">Cancel</button>
+  </div>
+
+  <div class="col-md-6">
+  </div>
+
+
+</div>
+
+<!-- destinations table -->
+<br>
+<div>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>No.</th>
+      <th>Destinations</th>
+      <th>Note</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngIf="dataForm[cycle_day]['destination'].length === 0">
+      <td colspan="4">
+        There's no data
+      </td>
+    </tr>
+    <tr *ngFor="let data of dataForm[cycle_day]['destination']; let i = index">
+      <td>{{i+1}}</td>
+      <td>{{data.customer_code}}</td>
+      <td>{{data.note}}</td>
+      <td>
+        <a class="icon-container" href="javascript:void(0)" *ngIf="!isView">
+          <i class="nb-icons nb-edit" (click)="editDestination(data, i)"></i>
+        </a>
+        <a class="icon-container" href="javascript:void(0)" *ngIf="!isView">
+          <i class="nb-icons nb-trash" (click)="deleteDestination(i)"></i>
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+</div>

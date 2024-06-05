@@ -1,0 +1,273 @@
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&isView" class="row">
+    <div class="col-md-6" *ngIf="!isApprovalView">
+        <button type="button" class="btn btn-primary" (click)="dataEdit()">Edit</button>
+    </div>
+    <div class="col-md-6" *ngIf="!isApprovalView">
+        <button type="button" class="btn btn-primary float-right" (click)="back()">Back</button>
+    </div>
+    <div class="col-md-6" *ngIf="isApprovalView">
+        <h1>APPROVAL PREVIEW</h1>
+    </div>
+</div>
+<div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&isView">
+    <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingDropdown||isLoadingGeneral"></ngx-form-loading>
+<form>
+    <fieldset [disabled]="isSubmitting||isView">
+        <nb-card *ngIf="!(isLoadingDropdown||isLoadingGeneral)">
+            <nb-card-header>User Group > {{method | ngxCapitalize}}</nb-card-header>
+            <toaster-container></toaster-container>
+            <nb-card-body *ngIf="!isLoadingDropdown&&!isLoadingGeneral">
+                <div class="row">
+                    <!--left side-->
+                    <div class="col-md-6">
+                        <ngx-form-input-td
+                                type="text"
+                                label="User Group Name"
+                                field="group_name"
+                                disabled=false
+                                [error]="serverErrors"
+                                [dataForm]="dataForm"></ngx-form-input-td>
+
+                        <ngx-form-input-td
+                                type="text"
+                                label="Code"
+                                field="code"
+                                [error]="serverErrors"
+                                disabled=false
+                                [dataForm]="dataForm"></ngx-form-input-td>
+
+                    </div>
+                    <!--end of left side-->
+
+                    <!-- right side -->
+                    <div class="col-md-6">
+
+                        <!--<ngx-form-input-td-->
+                        <!--type="select"-->
+                        <!--label="Asset"-->
+                        <!--field="have_asset"-->
+                        <!--[error]="serverErrors"-->
+                        <!--disabled=false-->
+                        <!--[dataSelect]="yes_no_dropdown"-->
+                        <!--dataSelectKey="key"-->
+                        <!--dataSelectLabel="val"-->
+                        <!--(change)="setAssetToNull($event.target.value)"-->
+                        <!--[dataForm]="dataForm"></ngx-form-input-td>-->
+
+                        <div class="form-group">
+                            <label for="select_have_asset">Asset</label>
+                            <ng-select
+                                    [items]="yes_no_dropdown"
+                                    [ngClass]="{'error': serverErrors['have_asset']}"
+                                    bindLabel="val"
+                                    bindValue="key"
+                                    id="select_have_asset"
+                                    placeholder="Asset"
+                                    [(ngModel)]="dataForm['have_asset']"
+                                    [disabled]="isView"
+                                    name="have_asset"
+                                    (change)="setAssetToNull($event.key)"
+                                    appendTo="body">
+                            </ng-select>
+                            <small class="form-text"
+                                   *ngIf="serverErrors['have_asset']">{{serverErrors['have_asset']}}</small>
+                        </div>
+
+                        <div class="row" *ngIf="dataForm['have_asset'] === 1">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <nb-checkbox
+                                            [ngClass]="{'form-control form-control-danger': serverErrors['asset'], 'form-control': true}"
+                                            [(ngModel)]="dataForm['asset']['mobile_phone']"
+                                            name="asset_mobile_phone"
+                                            id="asset_mobile_phone">Mobile Phone
+                                    </nb-checkbox>
+                                    <small class="form-text"
+                                           *ngIf="serverErrors['asset']">{{serverErrors['asset']}}</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <nb-checkbox
+                                            [ngClass]="{'form-control form-control-danger': serverErrors['asset'], 'form-control': true}"
+                                            [(ngModel)]="dataForm['asset']['printer']"
+                                            name="asset_printer"
+                                            id="asset_printer">Printer
+                                    </nb-checkbox>
+                                    <small class="form-text"
+                                           *ngIf="serverErrors['asset']">{{serverErrors['asset']}}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end of right side -->
+                </div>
+
+            </nb-card-body>
+        </nb-card>
+
+        <nb-card *ngIf="!(isLoadingDropdown||isLoadingGeneral)">
+            <nb-card-header>
+                Permission
+            </nb-card-header>
+
+            <nb-card-body *ngIf="!isLoadingDropdown&&!isLoadingGeneral">
+                <table class="table table-striped fixed_header">
+                    <thead>
+                    <tr>
+                        <!--<th>No.</th>-->
+                        <th>Modules / Activities</th>
+                        <th>Menu</th>
+                        <th>View</th>
+                        <th>Create</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                        <th>Import</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr *ngFor="let data of permissionTable; let i = index">
+                        <ng-template [ngIf]="!data['hidden']">
+                            <!--<td *ngIf="!data['hidden']">{{i + 1}}</td>-->
+
+                            <!--Module Name-->
+                            <td *ngIf="data.indent==0"><span>{{data.name}}</span></td>
+                            <td *ngIf="data.indent==1"><span style="margin-left: 12px !important;">{{data.name}}</span>
+                            </td>
+                            <td *ngIf="data.indent==2"><span style="margin-left: 24px !important;">{{data.name}}</span>
+                            </td>
+
+                            <!--Menu-->
+                            <td *ngIf="data.indent==0">
+                                <select class="form-control permission-table"
+                                        [(ngModel)]="dataPermissionTable[data.indexAtHierarchy(0)]['rule-view']"
+                                        name="permission_menu_{{i}}"
+                                        id="permission_menu_{{i}}">
+
+                                    <option *ngFor="let opt_menu of dropDownMenu" [ngValue]=opt_menu.value>
+                                        {{opt_menu.name}}
+                                    </option>
+                                </select>
+                            </td>
+                            <td *ngIf="data.indent==1">
+                                <select class="form-control permission-table"
+                                        [(ngModel)]="dataPermissionTable[data.indexAtHierarchy(0)][data.indexAtHierarchy(1)][data.indexAtHierarchy(2)]['rule-view']"
+                                        name="permission_menu_indent1_{{i}}"
+                                        id="permission_menu_indent1_{{i}}">
+
+                                    <option *ngFor="let opt_menu of dropDownMenu" [ngValue]=opt_menu.value>
+                                        {{opt_menu.name}}
+                                    </option>
+                                </select>
+                            </td>
+                            <td *ngIf="data.indent==2">
+                                <select class="form-control permission-table"
+                                        [(ngModel)]="dataPermissionTable[data.indexAtHierarchy(0)][data.indexAtHierarchy(1)][data.indexAtHierarchy(2)][data.indexAtHierarchy(3)][data.indexAtHierarchy(4)]['rule-view']"
+                                        name="permission_menu_indent2_{{i}}"
+                                        id="permission_menu_indent2_{{i}}">
+
+                                    <option *ngFor="let opt_menu of dropDownMenu" [ngValue]=opt_menu.value>
+                                        {{opt_menu.name}}
+                                    </option>
+                                </select>
+                            </td>
+
+                            <!--View-->
+                            <td *ngIf="data.indent==2">
+                                <select class="form-control permission-table"
+                                        [(ngModel)]="dataPermissionTable[data.indexAtHierarchy(0)][data.indexAtHierarchy(1)][data.indexAtHierarchy(2)][data.indexAtHierarchy(3)][data.indexAtHierarchy(4)]['rule'][0]"
+                                        name="permission_view_{{i}}"
+                                        id="permission_view_{{i}}">
+
+                                    <option *ngFor="let opt_menu of dropDownMenu" [ngValue]=opt_menu.value>
+                                        {{opt_menu.name}}
+                                    </option>
+                                </select>
+                            </td>
+                            <td *ngIf="data.indent!=2"></td>
+
+                            <!--Create-->
+                            <td *ngIf="data.indent==2">
+                                <select class="form-control permission-table"
+                                        [(ngModel)]="dataPermissionTable[data.indexAtHierarchy(0)][data.indexAtHierarchy(1)][data.indexAtHierarchy(2)][data.indexAtHierarchy(3)][data.indexAtHierarchy(4)]['rule'][1]"
+                                        name="permission_create_{{i}}"
+                                        id="permission_create_{{i}}">
+
+                                    <option *ngFor="let opt_menu of dropDownCrud" [ngValue]=opt_menu.value>
+                                        {{opt_menu.name}}
+                                    </option>
+                                </select></td>
+                            <td *ngIf="data.indent!=2"></td>
+
+                            <!--Edit-->
+                            <td *ngIf="data.indent==2">
+                                <select class="form-control permission-table"
+                                        [(ngModel)]="dataPermissionTable[data.indexAtHierarchy(0)][data.indexAtHierarchy(1)][data.indexAtHierarchy(2)][data.indexAtHierarchy(3)][data.indexAtHierarchy(4)]['rule'][2]"
+                                        name="permission_edit_{{i}}"
+                                        id="permission_edit_{{i}}">
+
+                                    <option *ngFor="let opt_menu of dropDownCrud" [ngValue]=opt_menu.value>
+                                        {{opt_menu.name}}
+                                    </option>
+                                </select></td>
+                            <td *ngIf="data.indent!=2"></td>
+
+                            <!--Delete-->
+                            <td *ngIf="data.indent==2">
+                                <select class="form-control permission-table"
+                                        [(ngModel)]="dataPermissionTable[data.indexAtHierarchy(0)][data.indexAtHierarchy(1)][data.indexAtHierarchy(2)][data.indexAtHierarchy(3)][data.indexAtHierarchy(4)]['rule'][3]"
+                                        name="permission_delete_{{i}}"
+                                        id="permission_delete_{{i}}">
+
+                                    <option *ngFor="let opt_menu of dropDownCrud" [ngValue]=opt_menu.value>
+                                        {{opt_menu.name}}
+                                    </option>
+                                </select></td>
+                            <td *ngIf="data.indent!=2"></td>
+
+                            <!--Import-->
+                            <td *ngIf="data.indent==2">
+                                <select class="form-control permission-table"
+                                        [(ngModel)]="dataPermissionTable[data.indexAtHierarchy(0)][data.indexAtHierarchy(1)][data.indexAtHierarchy(2)][data.indexAtHierarchy(3)][data.indexAtHierarchy(4)]['rule'][4]"
+                                        name="permission_import_{{i}}"
+                                        id="permission_import_{{i}}">
+
+                                    <option *ngFor="let opt_menu of dropDownImport" [ngValue]=opt_menu.value>
+                                        {{opt_menu.name}}
+                                    </option>
+                                </select>
+                            </td>
+                            <td *ngIf="data.indent!=2"></td>
+
+                            <!--Print-->
+                        </ng-template>
+                    </tr>
+                    </tbody>
+                </table>
+            </nb-card-body>
+        </nb-card>
+    </fieldset>
+
+    <div *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView">
+        <div *ngIf="!isSubmitting">
+            <button *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView&&(method==='edit')" [disabled]="isSubmitting"
+                    type="submit" class="btn btn-primary" (click)="saveData(dataForm, 'continue')">Save & Continue <i
+                    class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i></button>
+
+            <button *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView" [disabled]="isSubmitting" type="submit"
+                    class="btn btn-primary" (click)="saveData(dataForm, 'close')">Save & Close <i
+                    class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i></button>
+            <button *ngIf="!isLoadingDropdown&&!isLoadingGeneral&&!isView" [disabled]="isSubmitting" type="button"
+                    class="btn btn-danger" (click)="back()">Back <i class="fa fa-spinner fa-spin fa-fw"
+                                                                    *ngIf="isSubmitting"></i></button>
+        </div>
+        <div *ngIf="isSubmitting">
+            <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+        </div>
+    </div>
+</form>
+
+<ngx-dev-mode [dataJson]="dataForm"></ngx-dev-mode>

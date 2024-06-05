@@ -1,0 +1,24 @@
+<table datatable [dtOptions]="dtOptions" class="table table-striped">
+  <thead>
+  <tr>
+    <th *ngFor="let x of tableData">{{ x.name }}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of tableValue; let i = index">
+    <td *ngFor="let x of tableData">
+      <div *ngIf="x.keyName == 'no'">{{ (i + 1) + startNumber }}</div>
+      <div *ngIf="x.keyName != 'action' && x.keyName != 'no'">{{ data | GetValue: x.dataKey:x.specialConversion }}</div>
+      <div *ngIf="x.keyName == 'action'">
+        <ngx-action-button *ngFor="let y of actionButton"
+                           [variableName]="y.variableName"
+                           [variableFromObject]="data"
+                           (eventEmitter)="y.onClick(data)"
+                           [icon]="y.icon"
+                           [hiddenFunction]="y.hiddenFunction"></ngx-action-button>
+        <ngx-index-approval-flag *ngIf="withApproval" [data]="data"></ngx-index-approval-flag>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>

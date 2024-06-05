@@ -1,0 +1,94 @@
+<div class="row" *ngIf="isView">
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary" (click)="dataEdit()">Edit</button>
+  </div>
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary float-right" (click)="back()">Back</button>
+  </div>
+  <div class="col-md-6" *ngIf="isApprovalView">
+    <h1>APPROVAL PREVIEW</h1>
+  </div>
+</div>
+<div>
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingGeneral"></ngx-form-loading>
+<form *ngIf="!isLoadingGeneral">
+  <nb-card>
+    <nb-card-header>Assets</nb-card-header>
+    <toaster-container></toaster-container>
+    <nb-card-body>
+      <fieldset [disabled]="isView">
+        <div class="row">
+          <div class="col-md-6">
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="select"
+              label="Assets Type"
+              field="asset_type_id"
+              [error]="serverErrors"
+              [dataSelect]="dropdownAssetType"
+              dataSelectKey="id"
+              dataSelectLabel="name"
+              [showLoading]="isLoadingDropdownAssetType"
+              (actionOpen)="openDropdownAssetType()"
+            ></ngx-form-input-md>
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Assets ID"
+              field="id"
+              [error]="serverErrors"
+              *ngIf="false"
+            ></ngx-form-input-md>
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Code"
+              field="code"
+              [error]="serverErrors"
+            ></ngx-form-input-md>
+          </div>
+          <div class="col-md-6">
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="text"
+              label="Description"
+              field="name"
+              [error]="serverErrors">
+            </ngx-form-input-md>
+            <ngx-form-input-md
+              [group]="dataForm"
+              type="select"
+              label="Asset Status"
+              dataSelectLabel="status"
+              dataSelectKey="value"
+              field="asset_status"
+              [dataSelect]="asset_status"
+              [error]="serverErrors">
+            </ngx-form-input-md>
+          </div>
+        </div>
+        <ngx-form-input-md
+          [group]="dataForm"
+          type="textarea"
+          label="Notes"
+          field="notes"
+          [error]="serverErrors"
+        ></ngx-form-input-md>
+        <br/>
+      </fieldset>
+    </nb-card-body>
+  </nb-card>
+</form>
+<div *ngIf="!isLoadingGeneral&&!isView">
+  <div *ngIf="!isSubmitting">
+    <button class="btn btn-primary" (click)="save('continue')" *ngIf="method != 'create'">Save & Continue</button>
+    <button class="btn btn-primary" (click)="save('close')">Save & Close</button>
+    <button class="btn btn-danger" (click)="back()">Back</button>
+  </div>
+  <div *ngIf="isSubmitting">
+    <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+  </div>
+</div>
+<ngx-dev-mode [dataJson]="dataForm.value" title="Data Form"></ngx-dev-mode>

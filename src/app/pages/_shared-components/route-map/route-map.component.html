@@ -1,0 +1,129 @@
+<div class="row" *ngIf="withInstruction&&mapShow&&latitudePublic != null&& longitudePublic != null">
+  <div class="col-md-4">
+    <h1>Instruction</h1>
+    <table class="table table-striped">
+      <tr *ngFor="let instruction of dataInstructions;let i = index">
+        <td><b>{{ (i + 1) }}</b></td>
+        <td><b>{{instruction}}</b></td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-8">
+    <agm-map [latitude]="latitudePublic" [longitude]="longitudePublic" [zoom]="13" *ngIf="mapShow">
+      <agm-marker [latitude]="startPoint.lat" [longitude]="startPoint.lng" *ngIf="sameStartEnd == false">
+        <agm-info-window [isOpen]="true">
+          <strong style="color: #000;">Start Route</strong>
+        </agm-info-window>
+      </agm-marker>
+      <agm-marker [latitude]="endPoint.lat" [longitude]="endPoint.lng" *ngIf="sameStartEnd == false">
+        <agm-info-window [isOpen]="true">
+          <strong style="color: #000;">End Route</strong>
+        </agm-info-window>
+      </agm-marker>
+
+      <agm-marker [latitude]="endPoint.lat" [longitude]="endPoint.lng" *ngIf="sameStartEnd">
+        <agm-info-window [isOpen]="true">
+          <strong style="color: #000;">Start Route + End Route</strong>
+        </agm-info-window>
+      </agm-marker>
+      <agm-marker *ngFor="let destination of destination_order;let i = index;" [latitude]="destination.lat"
+                  [longitude]="destination.lng">
+        <agm-info-window [isOpen]="true">
+          <strong
+            style="color: #000;">{{ (usingRoute) ? (i + 1).toString().concat(" - ") : ""}} {{ destination | GetPointName: destinations:usingRoute }}</strong>
+        </agm-info-window>
+      </agm-marker>
+      <agm-polyline *ngIf="routeLineShow">
+        <agm-polyline-point
+          *ngFor="let point of routePoints"
+          [latitude]="point.lat"
+          [longitude]="point.lng"></agm-polyline-point>
+      </agm-polyline>
+
+      <div *ngIf="routeHistoryLineShow">
+        <agm-polyline *ngFor="let polyLine of optionalPolyLine" [strokeColor]="polyLine.color">
+          <agm-polyline-point
+            *ngFor="let point of polyLine.routes"
+            [latitude]="point.lat"
+            [longitude]="point.lng"></agm-polyline-point>
+        </agm-polyline>
+      </div>
+    </agm-map>
+  </div>
+</div>
+
+<div *ngIf="mapShow&&!withInstruction&&latitudePublic != null&& longitudePublic != null">
+  <agm-map [latitude]="latitudePublic" [longitude]="longitudePublic" [zoom]="13" *ngIf="mapShow"
+           (mapReady)="mapReady($event)">
+    <button id="devmode" class="btn btn-primary" style="margin-top: 10px;margin-right:10px;" (click)="openDevMode()"
+            *ngIf="!env.production">Recent Location
+    </button>
+    <button id="route" class="btn btn-primary" style="margin-top: 10px;margin-right:10px;" (click)="openDevRoutes()"
+            *ngIf="!env.production">All Routes
+    </button>
+    <button id="json" class="btn btn-primary" style="margin-top: 10px;margin-right:10px;" (click)="openDevJson()"
+            *ngIf="!env.production">JSON
+    </button>
+
+    <agm-marker [latitude]="startPoint.lat" [longitude]="startPoint.lng"
+                *ngIf="sameStartEnd == false&&pinPoinRoute">
+      <agm-info-window [isOpen]="true">
+        <strong style="color: #000;">Start Route</strong>
+      </agm-info-window>
+    </agm-marker>
+
+    <agm-marker [latitude]="endPoint.lat" [longitude]="endPoint.lng" *ngIf="sameStartEnd == false&&pinPoinRoute">
+      <agm-info-window [isOpen]="true">
+        <strong style="color: #000;">End Route</strong>
+      </agm-info-window>
+    </agm-marker>
+
+    <agm-marker [latitude]="endPoint.lat" [longitude]="endPoint.lng" *ngIf="sameStartEnd">
+      <agm-info-window [isOpen]="true">
+        <strong style="color: #000;">Start Route + End Route</strong>
+      </agm-info-window>
+    </agm-marker>
+
+    <agm-marker *ngFor="let destination of destination_order;let i = index;" [latitude]="+destination.lat"
+                [longitude]="+destination.lng">
+      <agm-info-window [isOpen]="true">
+        <strong
+          style="color: #000;">{{ (usingRoute) ? (i + 1).toString().concat(" - ") : ""}} {{ destination | GetPointName: destinations:usingRoute }}</strong>
+      </agm-info-window>
+    </agm-marker>
+
+    <agm-marker *ngFor="let poin of extraPinPoin;let i = index;" [latitude]="+poin.lat" [longitude]="+poin.lng"
+                [opacity]="(poin.opacity != null) ? poin.opacity : 1">
+      <agm-info-window [isOpen]="true">
+        <strong style="color: #000;">{{ poin.message }}</strong>
+      </agm-info-window>
+    </agm-marker>
+
+    <agm-polyline *ngIf="extraLine.length != 0">
+      <agm-polyline-point
+        *ngFor="let point of extraLine"
+        [latitude]="point.lat"
+        [longitude]="point.lng"></agm-polyline-point>
+    </agm-polyline>
+
+    <agm-polyline *ngIf="routeLineShow">
+      <agm-polyline-point
+        *ngFor="let point of routePoints"
+        [latitude]="point.lat"
+        [longitude]="point.lng"></agm-polyline-point>
+    </agm-polyline>
+
+    <div *ngIf="routeHistoryLineShow">
+      <agm-polyline *ngFor="let polyLine of optionalPolyLine" [strokeColor]="polyLine.color">
+        <agm-polyline-point
+          *ngFor="let point of polyLine.routes"
+          [latitude]="point.lat"
+          [longitude]="point.lng"></agm-polyline-point>
+      </agm-polyline>
+    </div>
+  </agm-map>
+</div>
+<div *ngIf="(dataRoutes == null || (latitudePublic == null && longitudePublic == null) ) && !hideAnyMessage"
+     class="alert alert-primary" role="alert">
+  Please generate route first to see route on map.
+</div>

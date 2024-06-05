@@ -1,0 +1,50 @@
+<nb-card>
+  <nb-card-header>Divisions</nb-card-header>
+  <toaster-container></toaster-container>
+
+  <nb-card-body>
+    <button class="btn btn-primary" type="button" routerLink="/pages/settings/divisions/create">
+      Create New Division
+    </button>
+    <button class="btn btn-primary" type="button" routerLink="/pages/settings/divisions/import">
+      Import
+    </button>
+    <br>
+    <br>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Create Date</th>
+          <th>Name</th>
+          <th>Code</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of datasets; let i = index">
+          <td>{{(i + 1) + startNumber }}</td>
+          <!-- @TODO: Fix harusnya ada medium date -->
+          <!--<td>{{data.create_date | date: 'mediumDate'}}</td>-->
+          <td>{{data.create_date }}</td>
+          <td>{{data.division_name}}</td>
+          <td>{{data.division_code}}</td>
+          <td>
+            <a class="icon-container" href="javascript:void(0)">
+              <i class="nb-icons nb-search" (click)="dataView(data.id)"></i>
+            </a>
+            <a class="icon-container" href="javascript:void(0)">
+              <i class="nb-icons nb-edit" (click)="dataEdit(data.id)"></i>
+            </a>
+            <a class="icon-container" href="javascript:void(0)">
+              <i class="nb-icons nb-trash" (click)="dataHapus(data.id)"></i>
+            </a>
+            <ngx-index-approval-flag [data]="data"></ngx-index-approval-flag>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+
+</nb-card>

@@ -1,0 +1,10 @@
+@import '../../../../@theme/styles/common/tab-table';
+agm-map {
+  display: block;
+  height: 100vh;
+}
+
+agm-map.showing {
+  display: block;
+  height: 400px;
+}

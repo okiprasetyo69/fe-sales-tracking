@@ -1,0 +1,92 @@
+<div *ngIf="!isLoadingGeneral" class="row">
+  <div class="col-md-6">
+    <button type="button" class="btn btn-primary" (click)="back()">Back</button>
+  </div>
+</div>
+<div *ngIf="!isLoadingGeneral">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingGeneral"></ngx-form-loading>
+<nb-card *ngIf="!isLoadingGeneral">
+  <nb-card-header>Payment</nb-card-header>
+  <nb-card-body>
+    <ngx-header-detail label="Invoice no." content="{{datasets['code']}}"></ngx-header-detail>
+    <!-- @TODO: Fix harusnya ada medium date -->
+    <ngx-header-detail label="Invoice date"
+                       content="{{datasets['invoice_date']}}"></ngx-header-detail>
+    <ngx-header-detail label="Payment no." content="--"></ngx-header-detail>
+    <!-- @TODO: Fix harusnya ada medium date -->
+    <ngx-header-detail label="Payment date"
+                       content="{{datasets['payment_date']}}"></ngx-header-detail>
+    <br>
+    <ngx-header-detail label="Sales Rep." content="--"></ngx-header-detail>
+    <div class="row">
+      <!--left side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Branch" content="--"></ngx-header-detail>
+      </div>
+      <!--right side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Division" content="--"></ngx-header-detail>
+      </div>
+    </div>
+
+    <br>
+    <ngx-header-detail label="Customer" content="--"></ngx-header-detail>
+    <div class="row">
+      <!--left side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Customer Branch" content="--"></ngx-header-detail>
+        <ngx-header-detail label="PIC" content="--"></ngx-header-detail>
+      </div>
+      <!--right side-->
+      <div class="col-md-6">
+        <ngx-header-detail label="Payment method" content="--"></ngx-header-detail>
+        <ngx-header-detail label="Total payment" content="{{total | currency:'IDR '}}"></ngx-header-detail>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-tabset>
+    <nb-tab tabTitle="Items">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>No.</th>
+          <th>Brand Name</th>
+          <th>Item Name</th>
+          <th>Qty</th>
+          <th>Unit</th>
+          <th>Unit Price</th>
+          <th>Discount</th>
+          <th>Sub Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of dataItems; let i = index">
+          <td>{{i+1}}</td>
+          <td>{{data.brand_name}}</td>
+          <td>{{data.product_name}}</td>
+          <td>{{data.quantity}}</td>
+          <td>Unit</td>
+          <td>{{data.unit_price | currency:'IDR '}}</td>
+          <td>{{data.discount}}</td>
+          <td>{{data.unit_price * data.quantity | currency: 'IDR '}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+          <td colspan="7">Total</td>
+          <td>{{total | currency:'IDR '}}</td>
+        </tr>
+        </tfoot>
+      </table>
+    </nb-tab>
+
+    <nb-tab tabTitle="Uploaded Images">
+      <div class="alert alert-danger">Not ready yet.. this component has no API.</div>
+    </nb-tab>
+  </nb-tabset>
+</nb-card>

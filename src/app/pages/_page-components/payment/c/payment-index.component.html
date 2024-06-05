@@ -1,0 +1,47 @@
+<nb-card>
+  <nb-card-header>Payment</nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <button class="btn btn-primary" type="button" routerLink="/pages/sales/activities/payment/index/confirmation">
+      Payment Confirmation
+    </button>
+    <br>
+    <br>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Date</th>
+          <th>Payment No.</th>
+          <th>Customer code</th>
+          <th>Branch</th>
+          <th>Division</th>
+          <th>Sales Rep</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of datasets; let i = index">
+          <td>{{(i + 1) + startNumber }}</td>
+          <!-- @TODO: Fix harusnya ada medium date -->
+          <td>{{data.payment_date}}</td>
+          <td>{{data.code}}</td>
+          <td>{{data.customer_code}}</td>
+          <td>{{data.user?.branch_name}}}</td>
+          <td>{{data.user?.division_name}}}</td>
+          <td>{{data.user?.employee_name}}}</td>
+          <td>{{data.status}}</td>
+          <td>
+            <a class="icon-container" href="javascript:void(0)">
+              <i class="nb-icons nb-search" (click)="dataShow(data.code)"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </nb-card-body>
+
+
+</nb-card>

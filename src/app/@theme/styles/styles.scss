@@ -1,0 +1,451 @@
+// themes - our custom or/and out of the box themes
+@import 'themes';
+// framework component themes (styles tied to theme variables)
+@import '~@nebular/theme/styles/globals';
+@import '~@nebular/auth/styles/all';
+// global app font size
+@import './font-size';
+//@import '~@ng-select/ng-select/themes/default.theme.css';
+@import 'select_theme';
+// loading progress bar theme
+@import './pace.theme';
+@import './bootstrap-rtl';
+
+// install the framework and custom global styles
+@include nb-install() {
+
+  // framework global styles
+  @include nb-theme-global();
+  @include nb-auth-global();
+
+  // loading progress bar
+  @include ngx-pace-theme();
+
+  // fixed in rc.9 and can be removed after upgrade
+  .custom-control .custom-control-indicator {
+    border-radius: 50%; // TODO: quickfix for https://github.com/akveo/nebular/issues/275
+  }
+
+  table {
+    width: 100% !important;
+  }
+
+  inline-editor-text > input {
+    margin-right: 5px;
+    height: 49px;
+  }
+
+  inline-editor-date > input {
+    margin-right: 5px;
+    height: 49px;
+  }
+
+  .ng-select .ng-select-container {
+    background-color: nb-theme(form-control-bg);
+    border: 2px solid nb-theme(form-control-border-color);
+    border-radius: nb-theme(form-control-border-radius);
+  }
+
+  .ng-select .ng-select-container .ng-value-container .ng-placeholder {
+    color: nb-theme(form-control-text-secondary-color);
+  }
+
+  .ng-select.ng-select-opened > .ng-select-container {
+    background: nb-theme(form-control-border-color);
+    border-color: nb-theme(form-control-border-color) nb-theme(form-control-border-color) nb-theme(form-control-border-color);
+  }
+
+  .ng-select .ng-has-value .ng-placeholder {
+    display: none;
+  }
+
+  .ng-dropdown-panel {
+    background-color: nb-theme(form-control-border-color);
+    border: 1px solid nb-theme(form-control-border-color);
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    background-color: nb-theme(form-control-bg);
+    color: nb-theme(form-control-text-primary-color);
+    padding: 8px 10px;
+  }
+
+  .page-link {
+    background-color: nb-theme(form-control-bg);
+    color: nb-theme(form-control-text-primary-color);
+    border-color: nb-theme(form-control-border-color);
+  }
+
+  .ng-value {
+    color: nb-theme(form-control-text-primary-color);
+  }
+
+  .ng-input > input {
+    color: nb-theme(form-control-text-primary-color);
+  }
+
+  .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+    font-size: 0.9em;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    background-color: nb-theme(form-control-bg);
+    border-radius: nb-theme(form-control-border-radius);
+    border: 1px solid nb-theme(form-control-text-secondary-color);
+  }
+
+  .ng-select.ng-select-opened > .ng-select-container {
+    background: nb-theme(form-control-bg);
+  }
+
+  ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon:hover {
+    background-color: nb-theme(form-control-border-color);
+  }
+
+  .ng-select.ng-select-focused.ng-select-opened > .ng-select-container {
+    border-color: nb-theme(form-control-selected-border-color);
+  }
+
+  .ng-spinner-loader {
+    border-top: 2px solid nb-theme(form-control-border-color) !important;
+    border-right: 2px solid nb-theme(form-control-border-color) !important;
+    border-bottom: 2px solid nb-theme(form-control-border-color) !important;
+    border-left: 2px solid nb-theme(form-control-text-primary-color) !important;
+  }
+
+  .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+    border-color: nb-theme(form-control-selected-border-color);
+  }
+
+  .ng-dropdown-header {
+    background-color: nb-theme(form-control-bg);
+  }
+
+  li.paginate_button.disabled > a {
+    background-color: nb-theme(form-control-bg);
+    color: nb-theme(form-control-text-primary-color);
+    border-color: nb-theme(form-control-border-color);
+  }
+
+  div.dataTables_processing {
+    background-color: nb-theme(card-bg);
+    color: nb-theme(card-fg-text);
+  }
+
+  button.btn.btn-xs.btn-primary.button-select-addon {
+    margin: 10px;
+    margin-right: 0px;
+    margin-left: 0px;
+    font-size: 13px;
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+  }
+
+  ng-select.error .ng-select-container {
+    border-color: nb-theme(form-control-danger-border-color);
+  }
+
+  .icon-notification {
+    background-color: nb-theme(badge-danger-bg-color);
+    color: nb-theme(badge-fg-text);
+    width: 30px;
+    height: 20px;
+    max-width: 30px;
+    max-height: 20px;
+    padding: 2px;
+    padding-top: 4px;
+    margin: 0;
+    font-size: 10px;
+    text-align: center;
+    border-radius: 5px;
+  }
+
+  .icon-notification-top-right {
+    position: absolute;
+    top: 0;
+    right: 7px;
+  }
+
+  button {
+    margin: 0 5px 0 0;
+  }
+
+  .input-group-append button {
+    margin: 0 !important;
+  }
+
+  .btn-group button {
+    margin: 0 !important;
+  }
+
+  // Untuk Timeline
+
+  .container ul {
+    list-style: none;
+    position: relative;
+    padding: 1px 100px;
+    color: nb-theme(form-control-text-primary-color);
+    font-size: 13px;
+  }
+
+  .container ul:before {
+    content: '';
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    border-left: 2px dashed #f39c12;
+  }
+
+  .container ul li {
+    position: relative;
+    margin-left: 30px;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 14px;
+    border-radius: 6px;
+    width: 350px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.08);
+  }
+
+  .container ul li.time-different {
+    position: relative;
+    background-color: transparent;
+    width: 250px;
+    box-shadow: none;
+    writing-mode: vertical-lr;
+  }
+
+  .container ul li.time-different > div {
+    margin-left: -65px;
+    color: nb-theme(color-warning);
+  }
+
+  .container ul li.time-different:not(:first-child) {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .container ul li > span {
+    width: 2px;
+    height: 100%;
+    background: nb-theme(form-control-text-primary-color);
+    left: -30px;
+    top: 0;
+    position: absolute;
+  }
+
+  .container ul li > span:before,
+  .container ul li > span:after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 2px solid nb-theme(form-control-text-primary-color);
+    position: absolute;
+    background: nb-theme(color-info);
+    left: -3px;
+    top: 0;
+  }
+
+  .container ul li span:after {
+    top: 100%;
+  }
+
+  .container ul li > div {
+    margin-left: 10px;
+  }
+
+  .container div .title,
+  .container div .type {
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .container div .info {
+    font-weight: 300;
+  }
+
+  .container div > div {
+    margin-top: 5px;
+  }
+
+  .container span.number {
+    height: 100%;
+  }
+
+  .container span.number span {
+    position: absolute;
+    font-size: 10px;
+    left: -35px;
+    font-weight: bold;
+  }
+
+  .container span.number span:first-child {
+    top: 0;
+  }
+
+  .container span.number span:last-child {
+    top: 100%;
+  }
+
+
+  // Gantt CSS Replacement
+  .fn-gantt {
+    border: 1px solid nb-theme(card-separator);
+  }
+  .fn-gantt .leftPanel {
+    border-right: 1px solid nb-theme(card-separator);
+  }
+
+  .fn-gantt .dataPanel {
+    outline: none;
+  }
+
+  .fn-gantt .leftPanel .spacer {
+    background-color: nb-theme(color-bg);
+  }
+
+  .fn-gantt .leftPanel .name, .fn-gantt .leftPanel .desc {
+    background-color: nb-theme(color-bg);
+  }
+
+  .fn-gantt .leftPanel .fn-label {
+    color: nb-theme(color-fg-heading);
+  }
+
+  .fn-gantt .bar .fn-label {
+    color: #fff !important;
+  }
+
+  .fn-gantt .bar {
+    background-color: nb-theme(card-header-active-bg);
+  }
+
+  // Header Tahun
+  .fn-gantt .rightPanel .month, .fn-gantt .rightPanel .year {
+    color: nb-theme(color-fg-heading);
+    background-color: nb-theme(color-bg);
+    border-right: 1px solid nb-theme(card-separator);
+    border-bottom: 1px solid nb-theme(card-separator);
+    display: block;
+    text-align: center;
+  }
+
+  // Header Hari Biasa
+  .fn-gantt .wd {
+    background-color: nb-theme(color-bg);
+    text-align: center;
+  }
+
+  // Header Hari Libur
+  .fn-gantt .sa, .fn-gantt .sn {
+    background-color: nb-theme(color-bg);
+  }
+
+  // Header Tanggal {
+  .fn-gantt .day, .fn-gantt .date {
+    display: block;
+    color: nb-theme(color-fg-heading);
+    text-align: center;
+    border-right: 1px solid nb-theme(card-separator);
+    border-bottom: 1px solid nb-theme(card-separator);
+  }
+
+  // Header Hari ini
+  .fn-gantt .today {
+    background-color: nb-theme(color-bg);
+  }
+
+  // Separator
+  .fn-gantt .leftPanel .row {
+    border-bottom: 1px solid nb-theme(card-separator);
+  }
+
+  .fn-gantt .leftPanel .row:last-child {
+    border-bottom: none;
+  }
+
+  .fn-gantt .leftPanel .row:first-child {
+    border-bottom: none;
+  }
+
+  // Bottom
+  .fn-gantt .bottom {
+    background-color: nb-theme(color-bg);
+  }
+
+  .fn-gantt .navigate .page-number span {
+    color: nb-theme(color-fg-heading);
+  }
+
+  .nav-link {
+    padding: 0;
+  }
+
+  .fn-gantt .navigate {
+    border-top: 1px solid nb-theme(card-separator);
+  }
+
+  .fn-gantt .dataPanel {
+    background-image: none;
+  }
+
+  .fn-gantt .ganttEmpty {
+    width: 0 !important;
+    background-color: nb-theme(color-bg);
+  }
+
+  .fn-gantt-loader {
+    background-color: nb-theme(color-bg);
+  }
+
+  // Hide Zoom Out
+  .fn-gantt .navigate .nav-zoomOut {
+    display: none;
+  }
+
+  // Hide Zoom In
+  .fn-gantt .navigate .nav-zoomIn {
+    display: none;
+  }
+
+
+  // End Gantt CSS Replacement
+
+  .visit-card {
+    padding: 10px;
+    -webkit-box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background-color: nb-theme(color-bg);
+    color: nb-theme(color-fg-heading);
+  }
+
+  .visit-card-customer-title {
+    padding: 5px 15px;
+    background-color: #3498db;
+    display: inline;
+    border-radius: 5px;
+    color: #fff;
+  }
+
+  .visit-card table tr td {
+    border: none !important;
+    vertical-align: top !important;
+    text-align: left !important;
+  }
+
+  .visit-card table tr th {
+    border: none !important;
+  }
+
+  .visit-card .customer table tr td {
+    padding: 0 !important;
+  }
+
+  nb-tabset ul.timeline-list {
+    border: none !important;
+  }
+
+  @include bootstrap-rtl();
+}

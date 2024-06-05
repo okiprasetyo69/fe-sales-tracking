@@ -1,0 +1,174 @@
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { FormGroup } from "@angular/forms";
+import { INgxMyDpOptions, IMyDateModel } from 'ngx-mydatepicker';
+import { UserService } from '../../../../../services/user.service';
+import { BranchService } from '../../../../../services/branch.service';
+import { untilDestroyed } from 'ngx-take-until-destroy';
+
+@Component({
+  selector: 'ngx-filter-performance',
+  templateUrl: './filter-performance.component.html',
+  styleUrls: ['./filter-performance.component.scss'],
+})
+export class FilterPerformanceComponent implements OnInit {
+  @Input() dataForm: FormGroup;
+  @Input() userData: any;
+  @Input() branchData: any;
+
+  @Output() filterData: EventEmitter<any> = new EventEmitter();
+  dataFormCloned: FormGroup;
+  serverErrors = [];
+
+  dropdownUserLoading = false;
+  dropdownBranchLoading = false;
+
+  dateConfigurationStart: INgxMyDpOptions = {
+    // other options...
+    dateFormat: 'yyyy-mm-dd',
+    appendSelectorToBody: true,
+  };
+
+  dateConfigurationEnd: INgxMyDpOptions = {
+    // other options...
+    dateFormat: 'yyyy-mm-dd',
+    appendSelectorToBody: true,
+  };
+
+  constructor(
+    private activeModal: NgbActiveModal,
+    private userService: UserService,
+    private branchService: BranchService,
+  ) {
+  }
+
+  ngOnInit() {
+    this.dataFormCloned = this.dataForm;
+    this.openUserDropdown();
+    this.openBranchDropdown();
+  }
+
+  changeUser($event) {
+    let users = [];
+    for (let x of $event) {
+      users.push(x.username);
+    }
+    console.info(users);
+    this.dataFormCloned.patchValue({username: users});
+  }
+
+
+  closeModal() {
+    this.activeModal.close();
+    this.activeModal.dismiss();
+  }
+
+  onDateStartChanged(event: IMyDateModel) {
+    const value = {};
+    if (event.epoc == 0) {
+      value['date_start'] = null;
+    } else {
+      value['date_start'] = event.formatted;
+    }
+    this.dataFormCloned.patchValue(value);
+  }
+
+  onDateEndChanged(event: IMyDateModel) {
+    const value = {};
+    if (event.epoc == 0) {
+      value['date_end'] = null;
+    } else {
+      value['date_end'] = event.formatted;
+    }
+    this.dataFormCloned.patchValue(value);
+  }
+
+  openUserDropdown() {
+    this.dropdownUserLoading = true;
+    this.userService.dropdownUserLogistic().pipe(untilDestroyed(this)).subscribe(resp => {
+      this.userData = resp.data.data;
+      this.dropdownUserLoading = false;
+    }, error => {
+      this.dropdownUserLoading = false;
+    });
+  }
+
+  openBranchDropdown() {
+    this.dropdownBranchLoading = true;
+    this.branchService.index_dropdown().pipe(untilDestroyed(this)).subscribe(resp => {
+      this.branchData = resp.data.data;
+      this.dropdownBranchLoading = false;
+    }, error => {
+      this.dropdownBranchLoading = false;
+    });
+  }
+
+  filterNow() {
+
+    let dataError = [];
+    let errorCounted = 0;
+
+    const current_date_start = this.dataFormCloned.controls['date_start'].value;
+    const current_date_end = this.dataFormCloned.controls['date_end'].value;
+
+
+    const current_date_start_splited = this.dataFormCloned.controls['date_start'].value.split('-');
+    const current_day_start = current_date_start_splited[2];
+    const current_month_start = current_date_start_splited[1];
+    const current_year_start = current_date_start_splited[0];
+
+    const current_date_end_splited = this.dataFormCloned.controls['date_end'].value.split('-');
+    const current_day_end = current_date_end_splited[2];
+    const current_month_end = current_date_end_splited[1];
+    const current_year_end = current_date_end_splited[0];
+
+    if (current_date_end == null || current_date_end == '') {
+      errorCounted += 1;
+      dataError['date_end'] = 'Please Select Date End';
+    } else {
+      if (current_year_end < current_year_start) {
+        errorCounted += 1;
+        dataError['date_end'] = 'The Year Could Not Less than Date Start';
+      } else if (current_year_end == current_year_start) {
+        if (current_month_end < current_month_start) {
+          errorCounted += 1;
+          dataError['date_end'] = 'The Month Could not Less than Date Start';
+        } else if (current_month_end == current_month_start) {
+          if (current_day_end < current_day_start) {
+            errorCounted += 1;
+            dataError['date_end'] = 'The Date Could not Less than Date Start';
+          }
+        }
+      }
+    }
+
+    if (current_date_start == null || current_date_start == '') {
+      errorCounted += 1;
+      dataError['date_start'] = 'Please Select Date End';
+    } else {
+      if (current_year_start > current_year_end) {
+        errorCounted += 1;
+        dataError['date_start'] = 'The Year Could Not More than Date End';
+      } else if (current_year_start == current_year_end) {
+        if (current_month_start > current_month_end) {
+          errorCounted += 1;
+          dataError['date_start'] = 'The Month Could not More than Date End';
+        } else if (current_month_start == current_month_end) {
+          if (current_day_start > current_day_end) {
+            errorCounted += 1;
+            dataError['date_start'] = 'The Date Could not More than Date End';
+          }
+        }
+      }
+    }
+
+
+    this.serverErrors = dataError;
+    if (errorCounted == 0) {
+      this.dataForm = this.dataFormCloned;
+      this.filterData.emit(this.dataForm);
+      this.activeModal.close();
+      this.activeModal.dismiss();
+    }
+  }
+}

@@ -1,0 +1,21 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
+// @Pipe({
+//   name: 'capitalize',
+// })
+// export class CapitalizePipe implements PipeTransform {
+//   transform(value: string, args?: any): any {
+//     return value.split(' ').map(word => {
+//       return word.length > 2 ? word[0].toUpperCase() + word.substr(1) : word;
+//     }).join(' ');
+//   }
+// }
+
+@Pipe({
+  name: 'notime',
+})
+export class NotimePipe implements PipeTransform {
+  transform(value: string, args?: any): any {
+    return value.slice(0, -8);
+  }
+}

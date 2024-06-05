@@ -1,0 +1,21 @@
+<div *ngIf="!isPlanNull">
+  <div *ngFor="let x of listImage">
+    <table *ngIf="x.customer_code == plan.customer_code">
+      <tr>
+        <td style="width: 210px;padding: 0 !important;">
+          <img [src]="x.image" width="100" height="100" (click)="openNewTab(x.base64)" style="margin: 5px 0;"/>
+        </td>
+        <td style="width: 100%;padding: 0 !important;">
+          <p style="margin: 0 10px;">
+            <b>{{ x.create_date }}</b><br/>
+            {{ x.note }}
+          </p>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div *ngIf="listImage == null || !this.countIsExist">
+  {{messageEmpty}}
+</div>
+<br/>

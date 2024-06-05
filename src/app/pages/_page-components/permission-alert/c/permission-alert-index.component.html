@@ -1,0 +1,59 @@
+<nb-card>
+  <nb-card-header>Permission & Alert</nb-card-header>
+  <toaster-container></toaster-container>
+
+  <nb-card-body>
+    <button class="btn btn-hero-info" type="button" (click)="toggleMode()">
+      View {{is_log === true ? 'Permission' : 'Log'}}
+    </button>
+    <br>
+    <div *ngIf="showApprovalButton">
+      <br>
+      <button class="btn btn-primary" type="button" (click)="approveButtonAction()">
+        Approve
+      </button>
+
+      <button class="btn btn-danger" type="button" (click)="rejectButtonAction()">
+        Reject
+      </button>
+    </div>
+    <br>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+      <tr>
+        <th *ngIf="!is_log"><nb-checkbox
+          (change)="toggleCheck($event.returnValue)"
+          [(ngModel)]="dataAllToggle[startNumber]"
+          name="toggle_check"
+          id="toggle_check"></nb-checkbox></th>
+        <th>No.</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>User</th>
+        <th>Status</th>
+        <th>Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of datasets; let i = index">
+        <td *ngIf="!is_log"><nb-checkbox
+          (change)="toggleItemCheck($event.returnValue, i + startNumber, data.id)"
+          [(ngModel)]="dataForm[data.id]"
+          name="toggle_item_check"
+          id="toggle_item_check_{{i}}"></nb-checkbox></td>
+        <td>{{(i + 1) + startNumber }}</td>
+        <td>{{data.date}}</td>
+        <td>{{data.time}}</td>
+        <td>{{data.user_code}}</td>
+        <td>{{data.status}}</td>
+        <td>{{data.description}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+
+</nb-card>
+
+<ngx-dev-mode [dataJson]="dataForm" title="dataForm"></ngx-dev-mode>
+<ngx-dev-mode [dataJson]="dataToggle" title="dataToggle"></ngx-dev-mode>
+<ngx-dev-mode [dataJson]="dataAllToggle" title="dataAllToggle"></ngx-dev-mode>

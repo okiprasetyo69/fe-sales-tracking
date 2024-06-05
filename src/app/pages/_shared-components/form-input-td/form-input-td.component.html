@@ -1,0 +1,207 @@
+<div class="form-group" *ngIf="type=='text'">
+  <label for="input_text_{{field}}">{{label}}</label>
+  <span *ngIf="!env.production">&nbsp;
+    <i class="ion ion-code-working"
+       [nbPopover]="developerMode"
+       nbPopoverPlacement="bottom">
+    </i>
+  </span>
+  <input
+    [type]="type"
+    [ngClass]="{'form-control form-control-danger': error[field], 'form-control': true}"
+    [(ngModel)]="dataForm[field]"
+    name={{field}}
+    id="input_text_{{field}}"
+    [placeholder]="label"
+    *ngIf="type"
+    [disabled]="disabled">
+  <small class="form-text" *ngIf="error[field]">{{error[field]}}</small>
+</div>
+
+<div class="form-group" *ngIf="type=='textarea'">
+  <label for="input_text_{{field}}">{{label}}</label>
+  <span *ngIf="!env.production">&nbsp;
+    <i class="ion ion-code-working"
+       [nbPopover]="developerMode"
+       nbPopoverPlacement="bottom">
+    </i>
+  </span>
+  <textarea
+    [ngClass]="{'form-control form-control-danger': error[field], 'form-control': true}"
+    [(ngModel)]="arrayForm[field]"
+    name="{{field}}"
+    id="input_textarea_{{field}}"
+    [placeholder]="label"
+    [disabled]="disabled"></textarea>
+  <small class="form-text" *ngIf="error[field]">{{error[field]}}</small>
+</div>
+
+<div class="form-group" *ngIf="type=='password'">
+  <label for="input_pass_{{field}}">{{label}}</label>
+  <span *ngIf="!env.production">&nbsp;
+    <i class="ion ion-code-working"
+       [nbPopover]="developerMode"
+       nbPopoverPlacement="bottom">
+    </i>
+  </span>
+  <input [type]="type"
+         [ngClass]="{'form-control form-control-danger': error[field], 'form-control': true}"
+         [(ngModel)]="dataForm[field]"
+         name={{field}}
+         id="input_pass_{{field}}"
+         [placeholder]="label"
+         [disabled]="disabled">
+  <small class="form-text" *ngIf="error[field]">{{error[field]}}</small>
+</div>
+
+<div class="form-group" *ngIf="type=='select'">
+  <label for="select_{{field}}">{{label}}</label>
+  <span class="icon" *ngIf="!env.production">&nbsp;
+    <i class="ion ion-code-working"
+       [nbPopover]="developerMode"
+       nbPopoverPlacement="bottom"></i>&nbsp;
+    <i class="ion ion-clipboard"
+       [nbPopover]="listSelect"
+       nbPopoverPlacement="bottom"></i>
+  </span>
+  <ng-select
+    [ngClass]="{'error': error[field]}"
+    [items]='dataSelect'
+    bindLabel={{dataSelectVal}}
+    bindValue={{dataSelectKey}}
+    id="select_{{field}}"
+    placeholder={{label}}
+    [(ngModel)]="arrayForm[field]"
+    [disabled]="disabled"
+    [ngClass]="{'error': error[field]}"
+    appendTo="body"
+    [loading]="showLoading"
+    (change)="changeAction()"
+    (open)="openAction()"
+    *ngIf="isCycle == false">
+  </ng-select>
+  <small class="form-text" *ngIf="error[field]">{{error[field]}}</small>
+</div>
+
+<div class="form-group" *ngIf="type=='select-destination-customer'">
+  <label for="select_{{field}}">{{label}}</label>
+  <span class="icon" *ngIf="!env.production">&nbsp;
+    <i class="ion ion-code-working"
+       [nbPopover]="developerMode"
+       nbPopoverPlacement="bottom"></i>&nbsp;
+    <i class="ion ion-clipboard"
+       [nbPopover]="listSelect"
+       nbPopoverPlacement="bottom"></i>
+  </span>
+  <!--suppress XmlDuplicatedId -->
+  <ng-select
+    [ngClass]="{'error': error[field]}"
+    [items]='dataDropdownDestination'
+    bindLabel="name"
+    bindValue="code"
+    id="select_{{field}}"
+    placeholder="{{label}}"
+    appendTo="body"
+    [(ngModel)]="arrayForm[field]"
+    [loading]="loadingDropdownDestination"
+    (open)="openDropdownDestination()">
+    <ng-template ng-option-tmp let-item="item">
+      {{item.name}} - {{item.code}} <br/>
+      <small>{{ (item.address) ? item.address : 'Doesn\'t have an address.'}}</small>
+    </ng-template>
+  </ng-select>
+  <small class="form-text" *ngIf="error[field]">{{error[field]}}</small>
+</div>
+
+<div class="form-group" *ngIf="type=='select-multiple'">
+  <label for="select_{{field}}">{{label}}</label>
+  <span class="icon" *ngIf="!env.production">&nbsp;
+    <i class="ion ion-code-working"
+       [nbPopover]="developerMode"
+       nbPopoverPlacement="bottom"></i>&nbsp;
+    <i class="ion ion-clipboard"
+       [nbPopover]="listSelect"
+       nbPopoverPlacement="bottom"></i>
+  </span>
+  <ng-select
+    [ngClass]="{'error': error[field]}"
+    [items]='dataSelect'
+    [multiple]="true"
+    [closeOnSelect]="false"
+    bindLabel={{dataSelectVal}}
+    bindValue={{dataSelectKey}}
+    id="select_multiple_{{field}}"
+    placeholder={{label}}
+    [disabled]="disabled"
+    [(ngModel)]="arrayForm[field]"
+    [ngClass]="{'error': error[field]}"
+    [loading]="showLoading"
+    (change)="changeAction()"
+    (open)="openAction()"
+    appendTo="body">
+    <ng-template ng-header-tmp>
+      <div class="row">
+        <div class="col-md-6">
+          <button class="btn btn-xs btn-primary button-select-addon btn-block" (click)="selectAll()"
+                  style="margin-left: 5px;margin-right: -5px;">All
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button class="btn btn-xs btn-primary button-select-addon btn-block" (click)="unselectAll()"
+                  style="margin-right: -5px;margin-left: -5px;">Unselect all
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </ng-select>
+  <small class="form-text" *ngIf="error[field]">{{error[field]}}</small>
+</div>
+
+<div class="form-group" *ngIf="type=='date'">
+  <!-- @TODO: Bug jika menggunakan date picker pada form input td, tidak muncul -->
+  <label for="select_{{field}}">{{label}}</label>
+  <span class="icon" *ngIf="!env.production">&nbsp;
+    <i class="ion ion-code-working" [nbPopover]="developerMode" nbPopoverPlacement="bottom"></i>
+  </span>
+  <!--suppress XmlDuplicatedId -->
+  <div class="input-group">
+    <!--suppress XmlDuplicatedId -->
+    <input id="select_{{field}}" class="form-control" style="float:none" placeholder="{{label}}" name="select_{{field}}" ngx-mydatepicker
+           value="{{arrayForm['field'] | date:'mediumDate'}}" [options]="dateConfiguration" [ngClass]="{'form-control form-control-danger': error[field], 'form-control': true}"
+           #dp="ngx-mydatepicker" (dateChanged)="onDateChanged($event)" readonly/>
+    <span class="input-group-append" *ngIf="!isView">
+      <button type="button" class="btn btn-danger" (click)="dp.clearDate()">
+        <i class="ion ion-close"></i>
+      </button>
+      <button type="button" class="btn btn-info" (click)="dp.toggleCalendar()">
+        <i class="ion ion-calendar"></i>
+      </button>
+    </span>
+  </div>
+  <small class="form-text" *ngIf="error[field]">{{error[field]}}</small>
+</div>
+
+<div class="form-group" *ngIf="type == null">
+  <label>Error</label>
+  <div class="alert alert-warning" role="alert">
+    Please select type of your form.
+  </div>
+</div>
+
+<ng-template #developerMode>
+  <input type="text" class="form-control" value="{{ dataForm[field] }} Form Input TD" readonly/>
+</ng-template>
+
+<ng-template #listSelect>
+  Form Input TD
+  <textarea class="form-control" style="width: 400px;height: 200px;" readonly>
+    {{dataSelect | json}}
+  </textarea>
+</ng-template>
+
+<ng-template #destinationSelect>
+  <textarea class="form-control" style="width: 400px;height: 200px;" readonly>
+    Form Input TD {{dataDropdownDestination | json}}
+  </textarea>
+</ng-template>
+

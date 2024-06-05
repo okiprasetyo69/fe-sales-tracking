@@ -1,0 +1,24 @@
+<nb-card>
+  <nb-card-header>Packing Slip
+    <div class="float-right">
+      <ngx-filter-button [indexTable]="indexTable" [userFilter]="false"></ngx-filter-button>
+    </div>
+  </nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <button class="btn btn-primary" type="button" routerLink="/pages/logistic/activities/packing_slip/import">
+      Import
+    </button>
+    <br/>
+    <br/>
+    <ngx-index-table endPoint="/packing/slip"
+                     urlReplacement="/pages/logistic/activities/packing_slip/index/page"
+                     [tableData]="tableData"
+                     [withAction]="true"
+                     [withNumber]="true"
+                     [actionButton]="actionButton"
+                     type="logistic"
+                     #indexTable>
+    </ngx-index-table>
+  </nb-card-body>
+</nb-card>

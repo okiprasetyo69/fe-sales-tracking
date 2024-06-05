@@ -1,0 +1,9 @@
+<br>
+<nb-card *ngIf="!env.production">
+  <nb-card-header *ngIf="withTitle">{{title}}
+    <button class="btn btn-primary" style="float: right;" (click)="copy()">Copy</button>
+  </nb-card-header>
+  <nb-card-body>
+    <pre>{{dataJson | json}}</pre>
+  </nb-card-body>
+</nb-card>

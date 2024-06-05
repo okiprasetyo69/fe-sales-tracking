@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-md-6">
+    <button type="button" class="btn btn-primary" (click)="back()">Back</button>
+  </div>
+</div>
+<br/>
+<nb-card>
+  <nb-card-header>Approval {{prefix_data?.label}}</nb-card-header>
+  <toaster-container></toaster-container>
+
+  <nb-card-body>
+    <table datatable [dtOptions]="dtOptions" class="table table-striped">
+      <thead>
+      <tr>
+        <th>No</th>
+        <th>Created Date</th>
+        <th>Data ID</th>
+        <th>Type</th>
+        <th>Created by</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of datasets; let i = index">
+        <td>{{(i + 1) + startNumber }}</td>
+        <td>{{ data.create_date }}</td>
+        <td>{{ data.data_id }}</td>
+        <td>{{ data.type }}</td>
+        <td>{{ data.create_user['employee_name'] }}</td>
+        <td>
+          <div *ngIf="data.is_approved">Approved</div>
+          <div *ngIf="!data.is_approved && !data.is_rejected">Pending</div>
+          <div *ngIf="data.is_rejected">Rejected</div>
+        </td>
+        <td>
+          <a class="icon-container" href="javascript:void(0)" style="margin-right: 8px" *ngIf="data.type !== 'delete' || data.is_approved == 0">
+            <i class="ion-document" style="font-size: 20px" (click)="dataView(data.data_id, 'current_data')"></i>
+          </a>
+          <a class="icon-container" href="javascript:void(0)" *ngIf="data.type == 'edit' && data.is_approved == 0 && data.is_rejected == 0" style="margin-right: 15px">
+            <i class="ion-document-text" style="font-size: 20px" (click)="dataView(data.id, 'new_data')"></i>
+          </a>
+
+          <a class="icon-container" href="javascript:void(0)" *ngIf="data.is_approved == 0 && data.is_rejected == 0" style="margin-right: 5px">
+            <i class="nb-checkmark" style="font-size: 20px" (click)="confirmation(data.data_id, data.type, 'accept')"></i>
+            <i class="nb-close" style="font-size: 20px" (click)="confirmation(data.data_id, data.type, 'reject')"></i>
+          </a>
+
+          <!--<a class="icon-container" href="javascript:void(0)">-->
+            <!--<i class="nb-icons nb-edit" (click)="dataEdit(data.id)"></i>-->
+          <!--</a>-->
+          <!--<a class="icon-container" href="javascript:void(0)">-->
+            <!--<i class="nb-icons nb-trash" (click)="dataHapus(data.id)"></i>-->
+          <!--</a>-->
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #modal_delete>
+  <div class="modal-header">
+    <span>Are you sure you want to {{ confirmation_type }}?</span>
+  </div>
+  <div class="modal-body">
+    <div>
+      Warning, you can't rollback after confirm this data.
+    </div>
+    <div *ngIf="isLoadingApproval">
+      <br/><i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{ confirmation_type }} data ...
+    </div>
+  </div>
+  <div class="modal-footer" *ngIf="!isLoadingApproval">
+    <button class="btn btn-md btn-danger" (click)="closeModal()">Cancel</button>
+    <button *ngIf="confirmation_type == 'accept'" class="btn btn-md btn-primary" (click)="doApprove(data_id, type)">Yes</button>
+    <button *ngIf="confirmation_type == 'reject'" class="btn btn-md btn-primary" (click)="doReject(data_id, type)">Yes</button>
+  </div>
+</ng-template>

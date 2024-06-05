@@ -1,0 +1,57 @@
+<nb-card>
+    <nb-card-body>
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Report Customer {{ type == "sales" ? "Visit" : type == "collector" ? "Payments" : "Delivery"  }}</h1>
+            </div>
+            <div class="col-md-4">
+                <div class="float-right">
+                    <button class="btn btn-sm btn-danger" (click)="dataFilter()" *ngIf="showFilter">
+                        <span *ngIf="requesting"><i class="fa fa-spinner fa-spin"></i></span>
+                        <span *ngIf="!requesting"><i class="fa fa-filter"></i></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="requesting">
+            <br/>
+            Please wait, getting information...
+        </div>
+        <div *ngIf="!requesting">
+            <div *ngIf="failed">
+                <br/>
+                {{customMessage}}
+            </div>
+            <nb-tabset (changeTab)="changeTab($event)" *ngIf="!failed">
+                <nb-tab tabTitle="Gantt">
+                    <br/>
+                    <!--        <input type="text" class="form-control" placeholder="Find Customer"/>-->
+                    <!--        <hr/>-->
+                    <div #gantt></div>
+                </nb-tab>
+                <nb-tab tabTitle="Map">
+                    <br/>
+                    <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [streetViewControl]="false">
+                        <!--          <agm-marker-cluster imagePath="assets/images/cluster/m">-->
+                        <agm-marker *ngFor="let x of ListCustomer" [latitude]="x.lat" [longitude]="x.lng"
+                                    [iconUrl]="(x.data_statistic_total == 0) ? 'assets/images/marker/marker-aspalt.png' : 'assets/images/marker/marker-red.png'">
+                            <agm-info-window>
+                                <strong style="color: #000;">{{ x.name }}</strong>
+                                <hr/>
+                                <p style="color: #000;">Customer Code :  {{ x.code }}</p>
+                                <p style="color: #000;">Data Statistic Total :  {{ x.data_statistic_total }}</p>
+                            </agm-info-window>
+                        </agm-marker>
+                        <!--          </agm-marker-cluster>-->
+                        <agm-polygon *ngFor="let x of ListArea" [paths]="x.markers" [editable]="false"
+                                     [polyDraggable]="false"
+                                     [fillColor]="x.marker_color"
+                                     [strokeColor]="x.marker_color">
+                        </agm-polygon>
+                    </agm-map>
+                </nb-tab>
+            </nb-tabset>
+        </div>
+
+    </nb-card-body>
+</nb-card>

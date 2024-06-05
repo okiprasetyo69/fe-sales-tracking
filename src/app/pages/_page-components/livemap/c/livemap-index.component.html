@@ -1,0 +1,116 @@
+<nb-card size="large">
+  <div class="consumption-table">
+    <div class="table-header">
+      <div>
+        Livemap
+        <div class="float-right">
+          <button class="btn btn-sm btn-primary" (click)="selectFilter()">
+            <i class="fa fa-filter"></i>
+          </button>
+        </div>
+      </div>
+      <br/>
+      <div class="subtitle">
+        <input type="text" class="form-control" placeholder="Search User..." (input)="search()"
+               [(ngModel)]="searchUser"/>
+      </div>
+      <br/>
+      <div class="alert alert-danger" role="alert" style="font-size: 14px;" *ngIf="listAllUser.length == 0">
+        User not found...
+      </div>
+    </div>
+    <div class="body-filter" *ngIf="filtering">
+      <label>Filtering</label>
+      <form>
+        <nb-checkbox *ngIf="statusSupervisorLogistic" (change)="checkBoxLogistic($event)">Logistic</nb-checkbox>
+        <nb-checkbox *ngIf="statusSupervisorSales" (change)="checkBoxSales($event)">Sales</nb-checkbox>
+      </form>
+      <br/>
+      <ng-select [items]='allBranchPrivilegeUser' bindLabel="name" bindValue="id" id="selected_branch"
+                 [(ngModel)]="selectedBranch"
+                 placeholder="Select Branch" name="selected_branch" multiple="true" appendTo="body"
+                 *ngIf="statusSupervisorLogistic||statusSupervisorSales"
+                 (change)="changeBranchDropdown()">
+      </ng-select>
+      <br/>
+      <ng-select [items]='allDivisionPrivilegeUser' bindValue="id" bindLabel="division_name" id="selected_division"
+                 [(ngModel)]="selectedDivision" placeholder="Select Division" name="selected_division" multiple="true"
+                 (change)="changeDivisionDropdown()"
+                 *ngIf="statusSupervisorSales&&(!isGlobalLogistic||isGlobalSales)" appendTo="body">
+      </ng-select>
+    </div>
+    <nb-tabset fullWidth *ngIf="listAllUser.length != 0&&filtering == false">
+      <nb-tab tabTitle="Sales" *ngIf="listSales.length != 0" [active]="true">
+        <div class="stats-month" *ngFor="let userSales of listSales;let i = index" (click)="focusUser(userSales)">
+          <div>
+            {{ userSales.name }}
+          </div>
+          <div class="results">
+            {{ (i + 1) }}
+          </div>
+        </div>
+      </nb-tab>
+      <nb-tab tabTitle="Logistic" *ngIf="listLogistic.length != 0">
+        <div class="stats-month" *ngFor="let userLogistic of listLogistic;let i = index"
+             (click)="focusUser(userLogistic)">
+          <div>
+            {{ userLogistic.name }}
+          </div>
+          <div class="results">
+            {{ (i + 1) }}
+          </div>
+        </div>
+      </nb-tab>
+    </nb-tabset>
+  </div>
+
+  <div class="chart-container">
+    <agm-map (mapReady)="onMapReady($event)" [latitude]="lat" [longitude]="lng" [fullscreenControl]="true"
+             [streetViewControl]="false" [zoom]="zoom" [disableDefaultUI]="true">
+      <div *ngIf="searchUser == null">
+        <agm-marker *ngFor="let m of markers; let i = index" [latitude]="m.lat" [longitude]="m.lng"
+                    [markerDraggable]="m.user_id == user_id"
+                    (dragEnd)="markerDragEnd(m, $event)"
+                    [iconUrl]="(m.job_function == 'driver') ?  'assets/images/truckBlue1.png' : (m.is_collector_only == 1) ? 'assets/images/scooterYellow1.png' : 'assets/images/beetleRed.png'"
+                    [title]="m.name">
+
+          <agm-info-window [isOpen]="true" [disableAutoPan]="true">
+            <ng-container *ngIf="m.is_collector_only == 1; else elseTemplate">
+              <strong>{{m.name}} - Collector</strong>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <strong>{{m.name}} - {{m.job_function | ngxCapitalize}}</strong>
+            </ng-template>
+            
+            <br/>
+            <strong>{{ m.asset_code }}</strong>
+            <!--<a href="javascript:void(0)" (click)="getUserRoutes(m.user_id, m.job_function)">Show Routes</a>-->
+          </agm-info-window>
+
+        </agm-marker>
+      </div>
+
+      <div *ngIf="searchUser != null">
+        <agm-marker *ngFor="let m of listAllUser; let i = index" [latitude]="m.lat" [longitude]="m.lng"
+                    [markerDraggable]="m.user_id == user_id" (dragEnd)="markerDragEnd(m, $event)"
+                    [iconUrl]="(m.job_function == 'driver') ?  'assets/images/truckBlue1.png' : (m.is_collector_only == 1) ? 'assets/images/scooterYellow1.png' : 'assets/images/beetleRed.png'"
+                    [title]="m.name">
+
+          <agm-info-window [isOpen]="true" [disableAutoPan]="true">
+            <!-- <strong>{{m.name}} - {{m.job_function | ngxCapitalize}}</strong> -->
+            <ng-container *ngIf="m.is_collector_only == 1; else elseTemplate">
+              <strong>{{m.name}} - Collector</strong>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <strong>{{m.name}} - {{m.job_function | ngxCapitalize}}</strong>
+            </ng-template>
+            <!--  -->
+            <br/>
+            <strong>{{ m.asset_code }}</strong>
+          </agm-info-window>
+
+        </agm-marker>
+      </div>
+    </agm-map>
+  </div>
+</nb-card>

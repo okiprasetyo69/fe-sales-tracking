@@ -1,0 +1,83 @@
+<div *ngIf="Plan != null">
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Date</h4>
+      <p>{{ Plan.date | date: 'mediumDate' }}</p>
+    </div>
+    <div class="col-md-6">
+      <h4>Branch</h4>
+      <p>{{ Plan.user.branch_name }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h4>User</h4>
+      <p>{{ Plan.user.name }}</p>
+    </div>
+    <div class="col-md-6" *ngIf="Plan.user?.division_name">
+      <h4>Division</h4>
+      <p>{{ Plan.user?.division_name }}</p>
+    </div>
+  </div>
+  <nb-tabset>
+    <nb-tab tabTitle="Visited">
+      <br/>
+      <div class="container">
+        <ul class="timeline-list" *ngIf="dataDestination.length != 0">
+          <div *ngFor="let x of dataDestination;let i = index;">
+            <li>
+              <div>
+                <div
+                  class="title">{{ (x.location_custom) ? "Custom Location" : (x.location_name == null) ? x.in_location_name : x.location_name }}</div>
+                <div class="info">{{ (x.location_address == null) ? x.in_location_address : x.location_address }}</div>
+                <div class="type" style="color:#F39C12;">
+                  {{ (x.start_time == "") ? x.stop_time : (x.stop_time == "") ? x.start_time : x.start_time + " - " + x.stop_time }}
+                  {{ (dataDestination[i].duration != 0) ? "( " + dataDestination[i].duration + " Menit )" : ""}}
+                </div>
+              </div>
+              <span class="number">
+                                <span>{{ (i == (dataDestination.length - 1)) ? x.start_time : ((i == 0) ? 'End' : ((x.stop_time != "") ? x.stop_time : "")) }}</span>
+                                <span>{{ (i == (dataDestination.length - 1)) ? 'Start' : ((i == 0) ? x.stop_time : x.start_time) }}</span>
+                            </span>
+            </li>
+            <li class="time-different" *ngIf="i != (dataDestination.length - 1)">
+              <div>{{ (dataDestination[i].time_range != 0) ? dataDestination[i].time_range + " Menit" : ""}}
+                <br/><br/> {{ (dataDestination[i].distance != 0) ? dataDestination[i].distance + " Meter" : "" }}
+              </div>
+            </li>
+          </div>
+        </ul>
+        <div class="alert alert-warning" role="alert" *ngIf="dataDestination.length == 0">
+          This Plan Does not Have any Destination
+        </div>
+      </div>
+    </nb-tab>
+    <nb-tab tabTitle="Unvisited">
+      <br/>
+      <div class="container">
+        <div class="alert alert-warning" role="alert" *ngIf="Plan.unvisit_customer.length == 0">
+          All is visited
+        </div>
+        <table *ngIf="Plan.unvisit_customer.length != 0">
+          <thead>
+          <tr>
+            <th>Customer Name</th>
+            <th>Address</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let x of Plan.unvisit_customer">
+            <td>{{ x.customer_name }}</td>
+            <td>{{ x.address }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </nb-tab>
+  </nb-tabset>
+</div>
+<div class="alert alert-warning" role="alert" *ngIf="Plan == null">
+  Unknown Plan Type
+</div>
+<br/>
+<br/>

@@ -1,0 +1,89 @@
+<nb-card>
+    <nb-card-header>
+        Report Delivery Plan ( {{dateStringTitle}} )
+        <div class="float-right">
+            <div *ngIf="!seeDetail">
+                <button class="btn btn-sm btn-success" (click)="exportExcel()">
+                    <i class="fa fa-file-excel"></i>
+                </button>
+                <button class="btn btn-sm btn-success" (click)="exportPdf()">
+                    <i class="fa fa-file-pdf"></i>
+                </button>
+                <button class="btn btn-sm btn-success" (click)="print()">
+                    <i class="fa fa-print"></i>
+                </button>
+                &nbsp;&nbsp;
+                <button class="btn btn-sm btn-danger" (click)="dataFilter()">
+                    <i class="fa fa-filter"></i>
+                </button>
+            </div>
+            <div *ngIf="seeDetail">
+                <button class="btn btn-primary" (click)="toggleSummaryCompetitorView()">
+                    {{ summaryCompetitorViewLabel }}
+                </button>
+                <button class="btn btn-primary" (click)="toggleDetail()">
+                    Back
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <toaster-container></toaster-container>
+
+    <nb-card-body>
+        <div [hidden]="seeDetail">
+            <table datatable [dtOptions]="dtOptions" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Date</th>
+                    <th>Plan Id</th>
+                    <th>Crew</th>
+                    <th>Branch</th>
+                    <th>Break Time</th>
+                    <th>Visited</th>
+                    <th>Stop Time</th>
+                    <th>Driving</th>
+                    <th>Plan</th>
+                    <th>Alert</th>
+                    <th>Permissions</th>
+                    <th>Unvisited</th>
+                    <th>Packing Slip</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let data of datasets; let i = index">
+                    <td>{{(i + 1) + startNumber }}</td>
+                    <td>{{ data.date | date: 'mediumDate'}}</td>
+                    <td>{{ data.id }}</td>
+                    <td>{{ data.user.name }}</td>
+                    <td>{{ data.user.branch_name }}</td>
+                    <td>{{data.data_performance.break_time}}</td>
+                    <td>{{data.data_performance.visited}}</td>
+                    <td>{{data.data_performance.visit_time}}</td>
+                    <td>{{data.data_performance.driving_time}}</td>
+                    <td>{{data.data_performance.plan}}</td>
+                    <td>{{data.data_performance.alert}}</td>
+                    <td>{{data.data_performance.permission}}</td>
+                    <td>{{data.data_performance.cancel}}</td>
+                    <td>{{data.data_performance.packing_slip}}</td>
+                    <td>
+                        <a class="icon-container" href="javascript:void(0)" (click)="openDetail(data)">
+                            <i class="nb-icons nb-search"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="seeDetail">
+            <div *ngIf="!summaryCompetitorView">
+                <ngx-plan-timeline [Plan]="dataDetail" [oldWay]="false"></ngx-plan-timeline>
+            </div>
+            <div *ngIf="summaryCompetitorView">
+                <ngx-visit-card [PlanSummaryType]="planSummaryType" [Plan]="plan"></ngx-visit-card>
+            </div>
+        </div>
+    </nb-card-body>
+
+</nb-card>

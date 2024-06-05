@@ -1,0 +1,185 @@
+<div *ngIf="!isLoadingGeneral&&isView" class="row">
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary" (click)="dataEdit()">Edit</button>
+  </div>
+  <div class="col-md-6" *ngIf="!isApprovalView">
+    <button type="button" class="btn btn-primary float-right" (click)="back()">Back</button>
+  </div>
+  <div class="col-md-6" *ngIf="isApprovalView">
+    <h1>APPROVAL PREVIEW</h1>
+  </div>
+</div>
+<div *ngIf="!isLoadingGeneral&&isView">
+  <br>
+</div>
+<ngx-form-loading [is_loading]="isLoadingGeneral"></ngx-form-loading>
+<form *ngIf="!isLoadingGeneral">
+  <nb-card>
+    <nb-card-header>Visit Cycle > {{method | ngxCapitalize}}</nb-card-header>
+    <toaster-container></toaster-container>
+    <nb-card-body>
+      <fieldset [disabled]="isSubmitting||isView">
+        <div class="row">
+          <!--left side-->
+          <div class="col-md-6">
+            <ngx-form-input-td
+              type="text"
+              label="Cycle no."
+              field="cycle_number"
+              [error]="serverErrors"
+              [dataForm]="dataForm"></ngx-form-input-td>
+          </div>
+          <!--end of left side-->
+
+          <!--right side-->
+          <div class="col-md-6">
+            <ngx-form-input-td
+              type="select"
+              field="user_id"
+              [dataSelect]="userDropdown"
+              [arrayForm]="dataForm"
+              dataSelectKey="id"
+              dataSelectVal="username"
+              label="User"
+              [disabled]="isView"
+              [error]="serverErrors"
+              (actionOpen)="loadUserDropdown()"
+              [showLoading]="userDropdownLoading"
+            ></ngx-form-input-td>
+          </div>
+          <!--end of right side-->
+        </div>
+      </fieldset>
+    </nb-card-body>
+  </nb-card>
+
+  <nb-card>
+    <fieldset [disabled]="isSubmitting||isView">
+      <nb-tabset *ngIf="!isLoadingGeneral">
+        <nb-tab tabTitle="Monday">
+          <ngx-form-destination
+            [arrayForm]="dataForm['cycle_monday']"
+            fieldRoute="route"
+            fieldStartBranch="start_route_branch_id"
+            fieldEndBranch="end_route_branch_id"
+            fieldDestination="destination"
+            fieldDestinationOrder="destination_order"
+            fieldUseRoute="is_use_route"
+            [isView]="isView"
+            [isFormGroup]="false"
+            [withOrder]="false"
+            [isCycle]="true"
+            [serverErrors]="errorCycle['cycle_monday']"></ngx-form-destination>
+        </nb-tab>
+        <nb-tab tabTitle="Tuesday">
+          <ngx-form-destination
+            [arrayForm]="dataForm['cycle_tuesday']"
+            fieldRoute="route"
+            fieldStartBranch="start_route_branch_id"
+            fieldEndBranch="end_route_branch_id"
+            fieldDestination="destination"
+            fieldDestinationOrder="destination_order"
+            fieldUseRoute="is_use_route"
+            [isView]="isView"
+            [withOrder]="false"
+            [isFormGroup]="false"
+            [serverErrors]="errorCycle['cycle_tuesday']"></ngx-form-destination>
+        </nb-tab>
+        <nb-tab tabTitle="Wednesday">
+          <ngx-form-destination
+            [arrayForm]="dataForm['cycle_wednesday']"
+            fieldRoute="route"
+            fieldStartBranch="start_route_branch_id"
+            fieldEndBranch="end_route_branch_id"
+            fieldDestination="destination"
+            fieldDestinationOrder="destination_order"
+            fieldUseRoute="is_use_route"
+            [isView]="isView"
+            [withOrder]="false"
+            [isFormGroup]="false"
+            [serverErrors]="errorCycle['cycle_wednesday']"></ngx-form-destination>
+        </nb-tab>
+        <nb-tab tabTitle="Thursday">
+          <ngx-form-destination
+            [arrayForm]="dataForm['cycle_thursday']"
+            fieldRoute="route"
+            fieldStartBranch="start_route_branch_id"
+            fieldEndBranch="end_route_branch_id"
+            fieldDestination="destination"
+            fieldDestinationOrder="destination_order"
+            fieldUseRoute="is_use_route"
+            [isView]="isView"
+            [withOrder]="false"
+            [isFormGroup]="false"
+            [serverErrors]="errorCycle['cycle_thursday']"></ngx-form-destination>
+        </nb-tab>
+        <nb-tab tabTitle="Friday">
+          <ngx-form-destination
+            [arrayForm]="dataForm['cycle_friday']"
+            fieldRoute="route"
+            fieldStartBranch="start_route_branch_id"
+            fieldEndBranch="end_route_branch_id"
+            fieldDestination="destination"
+            fieldDestinationOrder="destination_order"
+            fieldUseRoute="is_use_route"
+            [isView]="isView"
+            [withOrder]="false"
+            [isFormGroup]="false"
+            [serverErrors]="errorCycle['cycle_friday']"></ngx-form-destination>
+        </nb-tab>
+        <nb-tab tabTitle="Saturday">
+          <ngx-form-destination
+            [arrayForm]="dataForm['cycle_saturday']"
+            fieldRoute="route"
+            fieldStartBranch="start_route_branch_id"
+            fieldEndBranch="end_route_branch_id"
+            fieldDestination="destination"
+            fieldDestinationOrder="destination_order"
+            fieldUseRoute="is_use_route"
+            [isView]="isView"
+            [withOrder]="false"
+            [isFormGroup]="false"
+            [serverErrors]="errorCycle['cycle_saturday']"></ngx-form-destination>
+        </nb-tab>
+        <nb-tab tabTitle="Sunday">
+          <ngx-form-destination
+            [arrayForm]="dataForm['cycle_sunday']"
+            fieldRoute="route"
+            fieldStartBranch="start_route_branch_id"
+            fieldEndBranch="end_route_branch_id"
+            fieldDestination="destination"
+            fieldDestinationOrder="destination_order"
+            fieldUseRoute="is_use_route"
+            [isView]="isView"
+            [withOrder]="false"
+            [isFormGroup]="false"
+            [serverErrors]="errorCycle['cycle_sunday']"></ngx-form-destination>
+        </nb-tab>
+      </nb-tabset>
+    </fieldset>
+  </nb-card>
+
+  <div *ngIf="!isLoadingGeneral&&!isView">
+    <div *ngIf="!isSubmitting">
+      <button *ngIf="!isLoadingGeneral&&!isView&&(method == 'edit')" [disabled]="isSubmitting"
+              type="submit" class="btn btn-primary" (click)="saveData(dataForm, 'continue')">Save & Continue <i
+        class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+      </button>
+
+      <button *ngIf="!isLoadingGeneral&&!isView" [disabled]="isSubmitting" type="submit"
+              class="btn btn-primary" (click)="saveData(dataForm, 'close')">Save & Close <i
+        class="fa fa-spinner fa-spin fa-fw" *ngIf="isSubmitting"></i>
+      </button>
+      <button *ngIf="!isLoadingGeneral&&!isView" [disabled]="isSubmitting" type="button"
+              class="btn btn-danger" (click)="back()">Back <i class="fa fa-spinner fa-spin fa-fw"
+                                                              *ngIf="isSubmitting"></i>
+      </button>
+    </div>
+    <div *ngIf="isSubmitting">
+      <i class="fa fa-spinner fa-spin fa-fw"></i>&nbsp;{{dataName}}
+    </div>
+  </div>
+
+</form>
+
+<ngx-dev-mode [dataJson]="dataForm"></ngx-dev-mode>

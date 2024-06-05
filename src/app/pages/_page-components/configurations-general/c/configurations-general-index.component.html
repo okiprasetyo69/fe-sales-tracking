@@ -1,0 +1,244 @@
+<nb-card>
+  <nb-card-header>Alerts Configuration</nb-card-header>
+  <toaster-container></toaster-container>
+  <nb-card-body>
+    <h3>Stop Point</h3>
+    <div class="header">
+      <div>
+        <h6>Maximum length of visit time (minutes)</h6>
+      </div>
+      <div class="detail font-w-light">
+        <inline-editor type="text" [(ngModel)]="configsData['max_length_visit_time']"
+                       (onSave)="saveEditable($event, 'max_length_visit_time')"
+                       name="max_length_visit_time" size="4" pattern="^(0|[1-9][0-9]*)$" empty="-"
+                       (onError)="editableError()"></inline-editor>
+      </div>
+    </div>
+
+    <div class="header">
+      <div>
+        <h6>Maximum Length of Unloading (minutes)</h6>
+      </div>
+      <div class="detail font-w-light">
+        <inline-editor type="text" [(ngModel)]="configsData['max_length_unloading']"
+                       (onSave)="saveEditable($event, 'max_length_unloading')"
+                       name="max_length_unloading" size="4" pattern="^(0|[1-9][0-9]*)$" empty="-"
+                       (onError)="editableError()"></inline-editor>
+      </div>
+    </div>
+    <br>
+
+    <h3>Idle Time</h3>
+    <div class="header">
+      <div>
+        <h6>Maximum idle/stop time (minutes)</h6>
+      </div>
+      <div class="detail font-w-light">
+        <inline-editor type="text" [(ngModel)]="configsData['max_idle_time']"
+                       (onSave)="saveEditable($event, 'max_idle_time')" name="max_idle_time"
+                       size="4" pattern="^(0|[1-9][0-9]*)$" empty="-" (onError)="editableError()"></inline-editor>
+      </div>
+    </div>
+    <br>
+
+    <!--<h3>Geofence</h3>-->
+    <!--<div class="header">-->
+    <!--<div>-->
+    <!--<h6>Maximum area (m<sup>2</sup>)</h6>-->
+    <!--</div>-->
+    <!--<div class="detail font-w-light">-->
+    <!--<inline-editor type="text" [(ngModel)]="configsData['max_geofence_area']"-->
+    <!--(onSave)="saveEditable($event, 'max_geofence_area')"-->
+    <!--name="max_geofence_area" size="4" pattern="^(0|[1-9][0-9]*)$" empty="-"-->
+    <!--(onError)="editableError()"></inline-editor>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<br>-->
+
+    <!--<h3>Alert for Routes</h3>-->
+    <!--<div class="header">-->
+    <!--<div>-->
+    <!--<h6>Activate permission</h6>-->
+    <!--</div>-->
+    <!--<div class="detail font-w-light">-->
+    <!--<nb-checkbox [(ngModel)]="configsData['activate_permission']"-->
+    <!--(change)="saveEditable($event.returnValue, 'activate_permission')"></nb-checkbox>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<br>-->
+
+    <h3>Breaktime</h3>
+    <div class="header">
+      <div>
+        <h6>Maximum breaktime (minutes)</h6>
+      </div>
+      <div class="detail font-w-light">
+        <inline-editor type="text" [(ngModel)]="configsData['max_breaktime_time']"
+                       (onSave)="saveEditable($event, 'max_breaktime_time')"
+                       name="max_breaktime_time" size="4" pattern="^(0|[1-9][0-9]*)$" empty="-"
+                       (onError)="editableError()"></inline-editor>
+      </div>
+    </div>
+
+    <h3>Use Alert Wrong Route</h3>
+    <div class="header">
+      <div>
+        <h6>Notification appear when sales / driver wrong route</h6>
+      </div>
+      <div class="detail font-w-light" (mouseleave)="toggleAlertWrongRouteForm(false)">
+        <p *ngIf="!toggleEditUseWrongAlertRoute"
+           (click)="toggleAlertWrongRouteForm()">{{toggleUseWrongAlertValue ? 'Yes' : 'No' }}</p>
+        <nb-checkbox *ngIf="toggleEditUseWrongAlertRoute" [value]="toggleUseWrongAlertValue"
+                     (change)="toggleAlertWrongRouteField()">{{toggleUseWrongAlertValue ? 'Yes' : 'No' }}</nb-checkbox>
+      </div>
+    </div>
+
+    <h3>Use Alert Break Time</h3>
+    <div class="header">
+      <div>
+        <h6>Notification appear when breaktime exceed</h6>
+      </div>
+      <div class="detail font-w-light" (mouseleave)="toggleAlertBreakTimeForm(false)">
+        <p *ngIf="!toggleUseBreakTimeAlert"
+           (click)="toggleAlertBreakTimeForm()">{{toggleUseBreakTimeAlertValue ? 'Yes' : 'No' }}</p>
+        <nb-checkbox *ngIf="toggleUseBreakTimeAlert" [value]="toggleUseBreakTimeAlertValue"
+                     (change)="toggleAlertBreakTimeField()">{{toggleUseBreakTimeAlertValue ? 'Yes' : 'No' }}</nb-checkbox>
+      </div>
+    </div>
+    <br>
+  </nb-card-body>
+</nb-card>
+
+<!--<nb-card>-->
+<!--<nb-card-header>Order Configuration</nb-card-header>-->
+<!--<nb-card-body>-->
+<!--<h3>Reguler Order</h3>-->
+<!--<div class="header">-->
+<!--<div>-->
+<!--<h6>Maximum length of time for request order to sales order status (days)</h6>-->
+<!--</div>-->
+<!--<div class="detail font-w-light">-->
+<!--<inline-editor type="text" [(ngModel)]="configsData['max_order_sales_to_sales_order_time_reguler']" (onSave)="saveEditable($event, 'max_order_sales_to_sales_order_time_reguler')"-->
+<!--name="max_order_sales_to_sales_order_time_reguler" size="4" pattern="^(0|[1-9][0-9]*)$" empty="-" (onError)="editableError()"></inline-editor>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="header">-->
+<!--<div>-->
+<!--<h6>Maximum length of time for sales order to packing slip status (days)</h6>-->
+<!--</div>-->
+<!--<div class="detail font-w-light">-->
+<!--<inline-editor type="text" [(ngModel)]="configsData['max_sales_order_to_packing_slip_time_reguler']" (onSave)="saveEditable($event, 'max_sales_order_to_packing_slip_time_reguler')"-->
+<!--name="max_sales_order_to_packing_slip_time_reguler" size="4" pattern="^(0|[1-9][0-9]*)$" empty="-" (onError)="editableError()"></inline-editor>-->
+<!--</div>-->
+<!--</div>-->
+<!--<br>-->
+
+<!--<h3>Special Order</h3>-->
+<!--<div class="header">-->
+<!--<div>-->
+<!--<h6>Maximum length of time for request order to sales order status (minutes)</h6>-->
+<!--</div>-->
+<!--<div class="detail font-w-light">-->
+<!--<inline-editor type="text" [(ngModel)]="configsData['max_order_sales_to_sales_order_time_special']" (onSave)="saveEditable($event, 'max_order_sales_to_sales_order_time_special')"-->
+<!--name="max_order_sales_to_sales_order_time_special" size="4" pattern="^(0|[1-9][0-9]*)$" empty="-" (onError)="editableError()"></inline-editor>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="header">-->
+<!--<div>-->
+<!--<h6>Maximum length of time for sales order to packing slip status (minutes)</h6>-->
+<!--</div>-->
+<!--<div class="detail font-w-light">-->
+<!--<inline-editor type="text" [(ngModel)]="configsData['max_sales_order_to_packing_slip_time_special']" (onSave)="saveEditable($event, 'max_sales_order_to_packing_slip_time_special')"-->
+<!--name="max_sales_order_to_packing_slip_time_special" size="4" pattern="^(0|[1-9][0-9]*)$" empty="-" (onError)="editableError()"></inline-editor>-->
+<!--</div>-->
+<!--</div>-->
+<!--</nb-card-body>-->
+<!--</nb-card>-->
+
+<nb-card *ngIf="false">
+  <nb-card-header>Invoice Configuration</nb-card-header>
+  <nb-card-body>
+    <div class="header">
+      <div>
+        <h6>Invoicing Time , based on due payment date (days)</h6>
+      </div>
+      <div class="detail font-w-light">
+        <inline-editor type="text" [(ngModel)]="configsData['invoicing_time']"
+                       (onSave)="saveEditable($event, 'invoicing_time')" name="invoicing_time"
+                       size="4" pattern="^(0|[1-9][0-9]*)$" empty="-" (onError)="editableError()"></inline-editor>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-header>Visit & Delivery Cycle</nb-card-header>
+  <nb-card-body>
+    <div class="header">
+      <div>
+        <h6>Visit & Delivery Cycle Start</h6>
+      </div>
+      <div class="detail font-w-light">
+        <div *ngIf="!showDate" style="text-align: right;" (click)="changeDate()">
+          {{configsData['visit_cycle_start'] | date:'mediumDate'}}
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showDate">
+      <div class="form-group">
+        <div class="input-group">
+          <input
+            id="date"
+            class="form-control"
+            style="float:none"
+            placeholder="Select a date"
+            name="date"
+            ngx-mydatepicker
+            value="{{configsData['visit_cycle_start'] | date:'mediumDate'}}"
+            [options]="myOptions"
+            #dp="ngx-mydatepicker"
+            (dateChanged)="onDateChanged($event)"
+            readonly/>
+          <span class="input-group-append">
+              <button type="button" class="btn btn-danger" (click)="dp.clearDate()">
+                <i class="ion ion-close"></i>
+              </button>
+              <button type="button" class="btn btn-info" (click)="dp.toggleCalendar()">
+                <i class="ion ion-calendar"></i>
+              </button>
+              <button type="button" class="btn btn-success" (click)="changeDate()">
+                <i class="ion ion-checkmark"></i>
+              </button>
+            </span>
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-header>Company Logo
+    <div class="float-right">
+      <button class="btn btn-primary" *ngIf="imageData != null && !uploadingLogo"
+              (click)="toggleChangeLogo()">{{ isChangeLogo ? "Cancel" : "Change Logo"}}
+      </button>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <img *ngIf="imageData != null&&!isChangeLogo&&!uploadingLogo" [src]="imageData">
+    <input *ngIf="(imageData == null || isChangeLogo)&&!uploadingLogo" type="file" class="form-control-file"
+           (change)="handleFileSelect($event)"/>
+    <div *ngIf="isChangeLogo&&!uploadingLogo">
+      <br/>
+      <b>Note</b>
+      <p>Please upload image with Size <b>300x300</b></p>
+    </div>
+    <div *ngIf="uploadingLogo">
+      Uploading...
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<ngx-dev-mode [dataJson]="configsData"></ngx-dev-mode>
